@@ -12,10 +12,12 @@ public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 		
 		BasicQuery query = new BasicQuery();
 		
-		ArrayList<String> responses = query.getRelatedWords(input.getText());
+		ArrayList<String> responses = query.getRelatedWords( input.getText().toLowerCase() );
 		
 		if ( responses != null && !responses.isEmpty() ){
 			response.setText( responses.get(0) );
+		} else {
+			response.setText( "Disculpa, no logre entenderte, por favor repitemelo." );
 		}
 		
 		return response;
