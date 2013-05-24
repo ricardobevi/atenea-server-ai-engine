@@ -6,18 +6,33 @@ import org.scuadra.atenea.aiengine.algorithm.VerySimpleResponseAlgorithm;
 
 public class AIEngineFacade {
 	
+	private Boolean isDBStarted;
+	
+	public AIEngineFacade(){
+		this.initDatabase();
+	}
+	
 	public Message execute(Message input) {
 		
 		Message response;
 		
-		//inicia la bd si no esta iniciada.
-		NeuralDataAccess.init();
+		this.initDatabase();
 		
 		AbstractAlgorithm algorithm = new VerySimpleResponseAlgorithm();
 		
 		response = algorithm.excecute(input);
 		
 		return response;
+	}
+	
+	public void initDatabase(){
+		
+		if ( this.isDBStarted == false ){
+			//inicia la bd si no esta iniciada.
+			NeuralDataAccess.init();
+			this.isDBStarted = true;
+		}
+		
 	}
 	
 }

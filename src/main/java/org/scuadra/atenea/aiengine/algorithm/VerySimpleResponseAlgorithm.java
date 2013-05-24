@@ -14,10 +14,16 @@ public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 		
 		ArrayList<String> responses = query.getRelatedWords( input.getText().toLowerCase() );
 		
-		if ( responses != null && !responses.isEmpty() ){
+		if ( responses != null && 
+			 !responses.isEmpty() && 
+			 !responses.get(0).isEmpty()  ){
+			
 			response.setText( responses.get(0) );
+			
 		} else {
+			
 			response.setText( "Disculpa, no logre entenderte, por favor repitemelo." );
+			
 		}
 		
 		return response;
