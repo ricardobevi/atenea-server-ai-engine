@@ -1,4 +1,4 @@
-package org.scuadra.atenea.aiengine;
+package org.squadra.atenea.aiengine;
 
 import java.util.HashMap;
 
