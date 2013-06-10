@@ -1,9 +1,9 @@
-package org.scuadra.atenea.aiengine.algorithm;
+package org.squadra.atenea.aiengine.algorithm;
 
 import java.util.ArrayList;
 
-import org.atenea.data.query.BasicQuery;
-import org.scuadra.atenea.aiengine.Message;
+import org.squadra.atenea.aiengine.Message;
+import org.squadra.atenea.data.query.BasicQuery;
 
 public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 

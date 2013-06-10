@@ -1,8 +1,8 @@
-package org.scuadra.atenea.aiengine;
+package org.squadra.atenea.aiengine;
 
-import org.atenea.data.server.NeuralDataAccess;
-import org.scuadra.atenea.aiengine.algorithm.AbstractAlgorithm;
-import org.scuadra.atenea.aiengine.algorithm.VerySimpleResponseAlgorithm;
+import org.squadra.atenea.aiengine.algorithm.AbstractAlgorithm;
+import org.squadra.atenea.aiengine.algorithm.VerySimpleResponseAlgorithm;
+import org.squadra.atenea.data.server.NeuralDataAccess;
 
 public class AIEngineFacade {
 	
