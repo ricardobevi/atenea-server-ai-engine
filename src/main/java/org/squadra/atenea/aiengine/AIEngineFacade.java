@@ -9,6 +9,7 @@ public class AIEngineFacade {
 	private Boolean isDBStarted;
 	
 	public AIEngineFacade(){
+		isDBStarted = false;
 		this.initDatabase();
 	}
 	
