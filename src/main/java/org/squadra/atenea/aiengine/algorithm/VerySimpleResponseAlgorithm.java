@@ -7,23 +7,24 @@ import org.squadra.atenea.data.query.BasicQuery;
 
 public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 
-	public Message execute(Message input) {
-		Message response = new Message("");
+	public Message execute(Message inputMessage) {
+		
+		String inputText = inputMessage.getText();
+		
+		Message response = new Message();
 		
 		BasicQuery query = new BasicQuery();
 		
-		ArrayList<String> responses = query.getRelatedWords( input.getText().toLowerCase() );
+		ArrayList<String> responses = query.getRelatedWords( inputText.toLowerCase() );
 		
 		if ( responses != null && 
 			 !responses.isEmpty() && 
-			 !responses.get(0).isEmpty()  ){
+			 !responses.get(0).isEmpty() ){
 			
-			response.setText( responses.get(0) );
+			response = new Message(responses.get(0), Message.ASSERTION);
 			
 		} else {
-			
-			response.setText( "Disculpa, no logre entenderte, por favor repitemelo." );
-			
+			response = new Message("Disculpa, no logre entenderte, por favor repitemelo.", Message.UNKNOWN);
 		}
 		
 		return response;
