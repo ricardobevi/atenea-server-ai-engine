@@ -25,6 +25,11 @@ public class Message {
 	@Getter @Setter private HashMap<String, String> metadata;
 	
 	/**
+	 * Constructor por defecto. Debe estar OBLIGATORIAMENTE para que funcione el web service.
+	 */
+	public Message(){}
+	
+	/**
 	 * Constructor
 	 * @param text mensaje de entrada o de salida para reproducir
 	 * @param type tipo de mensaje
@@ -44,8 +49,6 @@ public class Message {
 		this.metadata = new HashMap<String, String>();
 	}
 	
-	public Message(){}
-
 	public void addMetadata (String key, String value) {
 		this.metadata.put(key, value);
 	}
