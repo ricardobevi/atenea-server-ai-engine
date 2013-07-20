@@ -21,7 +21,7 @@ public class AIEngineFacade {
 		
 		AbstractAlgorithm algorithm = new VerySimpleResponseAlgorithm();
 		
-		response = algorithm.excecute(input);
+		response = algorithm.execute(input);
 		
 		return response;
 	}

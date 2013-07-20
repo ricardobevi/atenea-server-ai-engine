@@ -7,7 +7,7 @@ import org.squadra.atenea.data.query.BasicQuery;
 
 public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 
-	public Message excecute(Message input) {
+	public Message execute(Message input) {
 		Message response = new Message("");
 		
 		BasicQuery query = new BasicQuery();
