@@ -1,9 +1,13 @@
 package org.squadra.atenea.aiengine;
 
+
+import lombok.extern.log4j.Log4j;
+
 import org.squadra.atenea.aiengine.algorithm.AbstractAlgorithm;
 import org.squadra.atenea.aiengine.algorithm.VerySimpleResponseAlgorithm;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 
+@Log4j
 public class AIEngineFacade {
 	
 	private Boolean isDBStarted;
@@ -15,6 +19,7 @@ public class AIEngineFacade {
 	
 	public Message execute(Message input) {
 		
+		log.debug("------------log AiEngine");
 		Message response;
 		
 		this.initDatabase();
