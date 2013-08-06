@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j;
 
 import org.squadra.atenea.aiengine.algorithm.AbstractAlgorithm;
 import org.squadra.atenea.aiengine.algorithm.VerySimpleResponseAlgorithm;
+import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 
 @Log4j

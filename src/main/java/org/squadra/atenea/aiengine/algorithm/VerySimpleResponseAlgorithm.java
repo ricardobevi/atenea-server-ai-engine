@@ -2,7 +2,7 @@ package org.squadra.atenea.aiengine.algorithm;
 
 import java.util.ArrayList;
 
-import org.squadra.atenea.aiengine.Message;
+import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.data.query.BasicQuery;
 
 public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
