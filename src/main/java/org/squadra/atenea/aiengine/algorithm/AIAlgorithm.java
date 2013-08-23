@@ -1,9 +1,9 @@
 package org.squadra.atenea.aiengine.algorithm;
 
-import org.squadra.atenea.aiengine.model.SyntaxTree;
 import org.squadra.atenea.aiengine.morphologic.MorphologicAnalizer;
 import org.squadra.atenea.aiengine.syntactic.SyntacticAnalizer;
 import org.squadra.atenea.ateneacommunication.Message;
+import org.squadra.atenea.parser.model.Sentence;
 
 /**
  * Algoritmo principal de Inteligencia Artificial de Atenea. 
@@ -20,10 +20,10 @@ public class AIAlgorithm implements AbstractAlgorithm {
 	public Message execute(Message inputMessage) {
 		
 		// Ejecuto el analizador morfologico
-		String correctSentence = MorphologicAnalizer.execute(inputMessage.getText());
+		String correctStringSentence = MorphologicAnalizer.execute(inputMessage.getText());
 		
 		// Ejecuto el analizador sintactico
-		SyntaxTree syntaxTree = SyntacticAnalizer.execute(correctSentence);
+		Sentence syntacticSentence = SyntacticAnalizer.execute(correctStringSentence);
 		
 		// Ejecuto el analizador semantico
 		

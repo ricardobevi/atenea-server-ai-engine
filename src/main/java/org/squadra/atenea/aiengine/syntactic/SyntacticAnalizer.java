@@ -1,21 +1,31 @@
 package org.squadra.atenea.aiengine.syntactic;
 
-import org.squadra.atenea.aiengine.model.SyntaxTree;
+import org.squadra.atenea.parser.Parser;
+import org.squadra.atenea.parser.model.Sentence;
+
 
 public class SyntacticAnalizer {
 
-	public static SyntaxTree execute(String inputSentence) {
+	/**
+	 * Metodo que se encarga de realizar el analisis sintactico de la oracion recibida.
+	 * Devuelve un arbol sintactico.
+	 * @param inputSentence Oracion proveniente del analizador morfologico
+	 * @return Arbol sintactico con la estructura de la oracion y las palabras clasificadas.
+	 */
+	public static Sentence execute(String inputSentence) {
 		
-		//TODO: Enviar la frase al CG3 y obtener la salida
+		//TODO: Pre-parsing (identificar los verbos imperativos desde la BD neuronal)
 		
-		//TODO: Parsear la salida y generar un arbol sintactico
+		Sentence sentence = new Parser().parse(inputSentence);
 		
 		//TODO: Aplicar reglas de concordancia (genero, numero, etc)
 		
 		//TODO: Actualizar la base neuronal con las palabras desconocidas (o lo hacemos en el semantico)
 		
-		return null;
+		return sentence;
 		
 	}
+	
+	
 	
 }
