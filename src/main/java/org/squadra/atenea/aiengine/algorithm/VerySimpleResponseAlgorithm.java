@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import lombok.extern.log4j.Log4j;
 
 import org.squadra.atenea.ateneacommunication.Message;
+import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.data.query.BasicQuery;
+import org.squadra.atenea.wordclassifier.WordClassifier;
 
 @Log4j
 public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
@@ -24,27 +26,13 @@ public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 //			 !responses.isEmpty() && 
 //			 !responses.get(0).isEmpty() )
 		{
-//			
+
 			if (inputText.contains("abrir") || inputText.contains("cerrar")) 
 			{
 				response.setType(Message.ORDER);
 				response.setOrder(inputText);
 				System.out.println(inputText);
 				
-//				switch (inputText) {
-//					case "abrir bloc de notas":
-//						response.setOrder("notepad.exe");
-//						break;
-//					case "cerrar bloc de notas":
-//						response.setOrder("taskkill /IM notepad.exe");
-//						break;
-//					case "abrir panel de control":
-//						response.setOrder("control");
-//						break;
-//					case "abrir administrador de tareas":
-//						response.setOrder("taskmgr");
-//						break;
-//				}
 				response.setText("Entendido");
 			}
 			else {
