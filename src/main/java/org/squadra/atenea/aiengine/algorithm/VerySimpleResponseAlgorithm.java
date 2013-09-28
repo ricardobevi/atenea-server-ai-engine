@@ -18,32 +18,35 @@ public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 		
 		Message response = new Message();
 		
-		//BasicQuery query = new BasicQuery();
-		
-		//ArrayList<String> responses = query.getRelatedWords( inputText );
-		
-//		if ( responses != null && 
-//			 !responses.isEmpty() && 
-//			 !responses.get(0).isEmpty() )
+		if (inputText.contains("abrir") 
+				|| inputText.contains("cerrar")
+				|| inputText.contains("poner")
+				|| inputText.contains("escribir")) 
 		{
-
-			if (inputText.contains("abrir") || inputText.contains("cerrar")) 
-			{
-				response.setType(Message.ORDER);
-				response.setOrder(inputText);
-				System.out.println(inputText);
-				
-				response.setText("Entendido");
-			}
-			else {
-				//response.setType(Message.ASSERTION);
-				response = new Message("Disculpa, no logre entenderte, por favor repitemelo.", Message.UNKNOWN);
-			}
+			response.setType(Message.ORDER);
+			response.setOrder(inputText);
+			response.setText("Entendido");
 			
+			System.out.println(inputText);
 			
-//		} else {
-//			response = new Message("Disculpa, no logre entenderte, por favor repitemelo.", Message.UNKNOWN);
+			return response;
 		}
+		
+		BasicQuery query = new BasicQuery();
+		ArrayList<String> responses = query.getRelatedWords( inputText );
+		
+		if ( responses != null && 
+			 !responses.isEmpty() && 
+			 !responses.get(0).isEmpty() )
+		{
+			response.setType(Message.ASSERTION);
+			response.setText(responses.get(0));
+		}
+		else {
+			response = new Message("Disculpa, no logre entenderte, por favor repitemelo.", Message.UNKNOWN);
+		}
+		
+		
 		
 		return response;
 	}
