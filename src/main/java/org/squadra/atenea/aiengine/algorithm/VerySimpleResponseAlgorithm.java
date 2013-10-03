@@ -21,6 +21,7 @@ public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 		if (inputText.contains("abrir") 
 				|| inputText.contains("cerrar")
 				|| inputText.contains("poner")
+				|| inputText.contains("buscar")
 				|| inputText.contains("escribir")) 
 		{
 			response.setType(Message.ORDER);
