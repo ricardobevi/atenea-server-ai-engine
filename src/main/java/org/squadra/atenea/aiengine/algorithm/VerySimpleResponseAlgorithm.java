@@ -26,7 +26,7 @@ public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{
 				|| inputText.contains("escribir")) 
 		{
 			response.setType(Message.ORDER);
-			response.setOrder(inputText);
+			response.setOrder(inputMessage.getText());
 			response.setText("Entendido");
 			
 			System.out.println(inputText);
