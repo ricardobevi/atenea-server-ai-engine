@@ -6,7 +6,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.squadra.atenea.aiengine.responses.DialogResponseSearcher;
-import org.squadra.atenea.aiengine.responses.UserMessageType;
+import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 
 public class DialogResponseSearcherTest {
@@ -45,6 +45,34 @@ public class DialogResponseSearcherTest {
 	public void saludoYPreguntaEstadoAnimo() {
 		System.out.println("\n========= SALUDA Y PREGUNTA ESTADO ANIMO ===========\n");
 		searchResponses(UserMessageType.Dialog.SALUDO_PREGUNTA_ESTADO_ANIMO, 5);
+		assertTrue(true);
+	}
+	
+	@Test
+	public void preguntaNombre() {
+		System.out.println("\n================ PREGUNTA NOMBRE ===================\n");
+		searchResponses(UserMessageType.Dialog.PREGUNTA_NOMBRE, 5);
+		assertTrue(true);
+	}
+	
+	@Test
+	public void preguntaEdad() {
+		System.out.println("\n================= PREGUNTA EDAD ====================\n");
+		searchResponses(UserMessageType.Dialog.PREGUNTA_EDAD, 5);
+		assertTrue(true);
+	}
+	
+	@Test
+	public void preguntaQueHaces() {
+		System.out.println("\n============== PREGUNTA QUE HACES ==================\n");
+		searchResponses(UserMessageType.Dialog.PREGUNTA_QUE_HACES, 5);
+		assertTrue(true);
+	}
+	
+	@Test
+	public void despedida() {
+		System.out.println("\n================== DESPEDIDA =======================\n");
+		searchResponses(UserMessageType.Dialog.DESPEDIDA, 10);
 		assertTrue(true);
 	}
 	
