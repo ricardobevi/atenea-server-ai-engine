@@ -2,10 +2,10 @@ package org.squadra.atenea.aiengine.responses;
 
 import java.util.ArrayList;
 
+import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.data.query.DialogQuery;
-import org.squadra.atenea.data.server.NeuralDataAccess;
 
 public class DialogResponseSearcher {
 
@@ -16,13 +16,15 @@ public class DialogResponseSearcher {
 	 */
 	public static String getRandomResponse(String inputMessageType) {
 		
+		// TODO: tomar el nombre de usuario de Message
+		String userName = "Leandro";
+		
 		String finalResponse = "";
-		String userName = "?";
 		Integer randomInt1 = (int) Math.round(Math.random() * 100);
 		Integer randomInt2 = (int) Math.round(Math.random() * 100);
 		Integer randomInt3 = (int) Math.round(Math.random() * 100);
 		
-		System.out.println("R1:" + randomInt1 + " R2:" + randomInt2 + " R3:" + randomInt3);
+		//System.out.println("R1:" + randomInt1 + " R2:" + randomInt2 + " R3:" + randomInt3);
 		
 		switch (inputMessageType) {
 			
@@ -71,12 +73,12 @@ public class DialogResponseSearcher {
 					finalResponse += getResponseByType(ResponseType.Dialog.SALUDO) + " ";
 				}
 				
-				if (randomInt1 <= 30) {
-					if (randomInt1 <= 20) {
+				if (randomInt1 <= 25) {
+					if (randomInt1 <= 10) {
 						finalResponse += "Estoy ";
-					} else if (randomInt1 <= 25) {
+					} else if (randomInt1 <= 20) {
 						finalResponse += "Me siento ";
-					} else if (randomInt1 <= 30) {
+					} else if (randomInt1 <= 25) {
 						finalResponse += "Me encuentro ";
 					}
 				}
@@ -84,8 +86,12 @@ public class DialogResponseSearcher {
 				finalResponse += getResponseByType(ResponseType.Dialog.RESPUESTA_ESTADO_ANIMO);
 				
 				if (randomInt2 <= 80) {
-					if (randomInt2 <= 30) {         // Estado de animo + y vos?
+					if (randomInt2 <= 20) {         // Estado de animo + y vos?
 						finalResponse += " Y vos?";
+					}
+					else if (randomInt2 <= 30) {    // Estado de animo + como estas?
+						finalResponse += " " +
+								getResponseByType(ResponseType.Dialog.PREGUNTA_ESTADO_ANIMO);
 					}
 					else if (randomInt2 <= 80) {    // Estado de animo + que necesitas?
 						finalResponse += " " +
@@ -93,11 +99,50 @@ public class DialogResponseSearcher {
 					}
 				}
 				break;
-				
+			
+			// Si el usuario le pregunta a Atenea como se llama
 			case UserMessageType.Dialog.PREGUNTA_NOMBRE:
+				
+				finalResponse += 
+						getResponseByType(ResponseType.Dialog.RESPUESTA_NOMBRE_ATENEA);
+				
+				if (userName.equals("?")) {    // Si no sabe el nombre le re-pregunta
+					finalResponse += " Y vos?";
+				}
+				break;
+				
+			// Si el usuario le pregunta a Atenea la edad
+			case UserMessageType.Dialog.PREGUNTA_EDAD:
+				
+				finalResponse += 
+						getResponseByType(ResponseType.Dialog.RESPUESTA_EDAD_ATENEA);
+				break;
+				
+			// Si el usuario le pregunta a Atenea que esta haciendo
+			case UserMessageType.Dialog.PREGUNTA_QUE_HACES:
+				
+				finalResponse += 
+						getResponseByType(ResponseType.Dialog.RESPUESTA_A_QUE_HACES);
+				break;
+				
+			// Si el usuario le pregunta a Atenea que esta haciendo
+			case UserMessageType.Dialog.DESPEDIDA:
+				
+				finalResponse += 
+						getResponseByType(ResponseType.Dialog.DESPEDIDA);
+				
+				if (!userName.equals("?") && randomInt1 <= 30) { // Despedida + nombre del usuario
+					finalResponse = 
+							finalResponse.substring(0, finalResponse.length() - 1) +
+							" " + userName + ".";
+				}
 				
 				break;
 		}
+		
+		finalResponse = finalResponse
+				.replace("%nombre%", "Atenea")
+				.replace("%edad%", "4 meses");
 		
 		return finalResponse;
 	}
