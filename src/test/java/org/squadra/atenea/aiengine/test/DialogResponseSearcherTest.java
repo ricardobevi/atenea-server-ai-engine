@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.squadra.atenea.aiengine.responses.DialogResponseSearcher;
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
+import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 
 public class DialogResponseSearcherTest {
@@ -22,8 +23,9 @@ public class DialogResponseSearcherTest {
 	}
 	
 	public void searchResponses(String type, int cant) {
+		Message message = new Message("Ejemplo");
 		for (int i = 0; i < cant; i++) {
-			System.out.println("RESPUESTA FINAL === " + DialogResponseSearcher.getRandomResponse(type));
+			System.out.println("RESPUESTA FINAL === " + DialogResponseSearcher.getRandomResponse(message, type));
 		}
 	}
 	

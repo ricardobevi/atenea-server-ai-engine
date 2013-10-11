@@ -13,28 +13,44 @@ import org.squadra.atenea.parser.model.Sentence.Type;
 
 public class SentenceClassifier {
 
-	/**
-	 * Clasifica la oracion en PREGUNTA, DIALOGO, AFIRMACION u ORDEN
-	 * asignandole el type al objeto Sentence y devuelve un string con
-	 * el significado del mensaje.
-	 * @param sentence Oracion analizada sintacticamente.
-	 * @return Tipo de significado el mensaje del usuario.
-	 */
-public static String classify(Sentence sentence, Message message) {
+/**
+ * Clasifica la oracion en PREGUNTA, DIALOGO, AFIRMACION u ORDEN
+ * asignandole el type al objeto Sentence y devuelve un string con
+ * el significado del mensaje.
+ * @param sentence Oracion analizada sintacticamente.
+ * @return Tipo de significado el mensaje del usuario.
+ */
+public static String classify(Message message, Sentence sentence) {
 		
 		Type sentenceType = Type.UNKNOWN;
+		String userMessageType = "";
 		ArrayList<Word> words = sentence.getAllWords(false);
 		
+		// Si la primera palabra es un verbo en infinitivo -> es una ORDEN
 		if (words.get(0).getMode().equals(WordTypes.Mode.INFINITIVE)) {
+			
 			sentenceType = Type.ORDER;
 			message.setOrder(sentence.toString());
 			
-			System.out.println("ES UNA ORDEN");
+			// TODO: cuando mudemos las acciones al servidor, aca hay que validar
+			//       si es una accion conocida o desconocida
+			
+			userMessageType = UserMessageType.Order.ORDEN_DESCONOCIDA;
+			
+			System.out.println("Clasificacion: ORDEN");
+		}
+		else {
+			
+			sentenceType = Type.DIALOG;
+			
+			// TODO: procesar tipo de mensaje para DIALOGOS
+			
+			userMessageType = UserMessageType.Dialog.SALUDO;
 		}
 		
 		sentence.setType(sentenceType);
 		
-		return null;
+		return userMessageType;
 	}
 
 
