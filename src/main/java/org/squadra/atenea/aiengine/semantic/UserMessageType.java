@@ -20,4 +20,10 @@ public class UserMessageType {
 		public static final String PREGUNTA_EDAD = "PREGUNTA_EDAD";
 		public static final String PREGUNTA_QUE_HACES = "PREGUNTA_QUE_HACES";
 	}
+	
+	public static class Order {
+		
+		public static final String ORDEN_CONOCIDA = "ORDEN_CONOCIDA";
+		public static final String ORDEN_DESCONOCIDA = "ORDEN_DESCONOCIDA";
+	}
 }

@@ -27,12 +27,16 @@ public class ResponseType {
 		public static final String RESPUESTA_A_ESTADO_ANIMO_USUARIO_MAL = "$_RESPUESTA_A_ESTADO_ANIMO_USUARIO_MAL";
 		public static final String RESPUESTA_EDAD_ATENEA = "$_RESPUESTA_EDAD_ATENEA";
 		public static final String RESPUESTA_A_QUE_HACES = "$_RESPUESTA_A_QUE_HACES";
+	}
+	
+	public static class Order {
 		
+		public static final String ORDEN_CONOCIDA = "$_ORDEN_CONOCIDA";
+		public static final String ORDEN_DESCONOCIDA = "$_ORDEN_DESCONOCIDA";
 	}
 	
 	public static class Assertion {
 		
 		public static final String AFFIRMATION = "$_AFIRMACION";
-		
 	}
 }

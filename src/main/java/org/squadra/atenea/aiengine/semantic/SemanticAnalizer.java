@@ -5,11 +5,11 @@ import org.squadra.atenea.parser.model.Sentence;
 
 public class SemanticAnalizer {
 
-	public static String execute(Sentence sentence, Message message) {
+	public static String execute(Message message, Sentence sentence) {
 		
 		// TODO: validacion de significado (busqueda probablilistica en la BD)
 		
-		return SentenceClassifier.classify(sentence, message);
+		return SentenceClassifier.classify(message, sentence);
 	
 	}
 }

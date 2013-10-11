@@ -3,6 +3,7 @@ package org.squadra.atenea.aiengine.responses;
 import java.util.ArrayList;
 
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
+import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.data.query.DialogQuery;
@@ -14,17 +15,17 @@ public class DialogResponseSearcher {
 	 * @param inputMessageType Tipo de mensaje de entrada del usuario.
 	 * @return Respuesta final que se devolverá al usuario.
 	 */
-	public static String getRandomResponse(String inputMessageType) {
+	public static String getRandomResponse(Message message, String inputMessageType) {
 		
-		// TODO: tomar el nombre de usuario de Message
+		// TODO: tomar estos datos del cliente
 		String userName = "Leandro";
+		String systemName = "Atenea";
+		String systemAge = "4 meses";
 		
 		String finalResponse = "";
 		Integer randomInt1 = (int) Math.round(Math.random() * 100);
 		Integer randomInt2 = (int) Math.round(Math.random() * 100);
 		Integer randomInt3 = (int) Math.round(Math.random() * 100);
-		
-		//System.out.println("R1:" + randomInt1 + " R2:" + randomInt2 + " R3:" + randomInt3);
 		
 		switch (inputMessageType) {
 			
@@ -138,11 +139,16 @@ public class DialogResponseSearcher {
 				}
 				
 				break;
+			
+			// No deberia pasar nunca por aca
+			default:
+				finalResponse = "Disculpa, no entendí lo que me dijiste.";
+				break;
 		}
 		
 		finalResponse = finalResponse
-				.replace("%nombre%", "Atenea")
-				.replace("%edad%", "4 meses");
+				.replace("%nombre%", systemName)
+				.replace("%edad%", systemAge);
 		
 		return finalResponse;
 	}
@@ -156,7 +162,7 @@ public class DialogResponseSearcher {
 	public static String getResponseByType(String type) {
 		
 		DialogQuery dq = new DialogQuery();
-		ArrayList<Word> response = dq.findRandomSentenceByDialogType(type);
+		ArrayList<Word> response = dq.findRandomSentenceByDialogType("dialogType", type);
 		
 		String responseText = "";
 		
