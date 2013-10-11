@@ -1,5 +1,6 @@
 package org.squadra.atenea.aiengine.responses;
 
+import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.parser.model.Sentence;
 
 /**
@@ -10,21 +11,30 @@ import org.squadra.atenea.parser.model.Sentence;
  */
 public class ResponseSearcher {
 
-	public static String execute(Sentence.Type sentenceType, String inputMessageType) {
+	public static void execute(Sentence.Type sentenceType, String inputMessageType, Message message) {
 		
-		String response = "";
+		String responseText;
+		int responseType;
 		
 		switch (sentenceType) {
 		
 			case DIALOG:
-				response = DialogResponseSearcher.getRandomResponse(inputMessageType);
+				responseText = DialogResponseSearcher.getRandomResponse(inputMessageType);
+				responseType = Message.DIALOG;
+				break;
+			
+			case ORDER:
+				responseText = OrderResponseSearcher.getRandomResponse(inputMessageType);
+				responseType = Message.ORDER;
 				break;
 				
 			default:
-				response = "Disculpa, no logro entenderte.";
+				responseText = "Disculpa, no logro entenderte.";
+				responseType = Message.UNKNOWN;
 				break;
 		}
 		
-		return response;
+		message.setText(responseText);
+		message.setType(responseType);
 	}
 }

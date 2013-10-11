@@ -2,6 +2,7 @@ package org.squadra.atenea.aiengine.algorithm;
 
 import org.squadra.atenea.aiengine.morphologic.MorphologicAnalizer;
 import org.squadra.atenea.aiengine.responses.ResponseSearcher;
+import org.squadra.atenea.aiengine.semantic.SemanticAnalizer;
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.aiengine.syntactic.SyntacticAnalizer;
 import org.squadra.atenea.ateneacommunication.Message;
@@ -21,20 +22,25 @@ public class AIAlgorithm implements AbstractAlgorithm {
 	@Override
 	public Message execute(Message inputMessage) {
 		
+		Message outputMessage = new Message();
+		
 		// Ejecuto el analizador morfologico
 		String correctStringSentence = MorphologicAnalizer.execute(inputMessage.getText());
 		
 		// Ejecuto el analizador sintactico
 		Sentence syntacticSentence = SyntacticAnalizer.execute(correctStringSentence);
 		
-		// TODO: Ejecuto el analizador semantico
-		// TODO: El semantico deberia definir el tipo de oracion y el significado del mensaje
+		// Ejecuto el analizador semantico
+		String userMessageType = SemanticAnalizer.execute(syntacticSentence, outputMessage);
 		
 		// Ejecuto la busqueda de respuestas
-		String responseText = ResponseSearcher.execute(Sentence.Type.DIALOG, UserMessageType.Dialog.SALUDO);
+		ResponseSearcher.execute(syntacticSentence.getType(), userMessageType, outputMessage);
+		
+		System.out.println("RESPUESTA: " + outputMessage.getText());
+		System.out.println("ORDEN: " + outputMessage.getOrder());
 		
 		// Devuelvo el mensaje de salida
-		return null;
+		return outputMessage;
 	}
 
 }
