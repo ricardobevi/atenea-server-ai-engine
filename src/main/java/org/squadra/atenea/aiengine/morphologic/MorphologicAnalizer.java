@@ -8,6 +8,8 @@ public class MorphologicAnalizer {
 		
 		//TODO: Aca hay que adaptar la oracion recibida de Google al formato requerido por el CG3
 		
+		outputSentence = outputSentence.replace("Atenea", "atenea");
+		
 		return outputSentence;
 	}
 }

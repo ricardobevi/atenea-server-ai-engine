@@ -26,4 +26,6 @@ public class UserMessageType {
 		public static final String ORDEN_CONOCIDA = "ORDEN_CONOCIDA";
 		public static final String ORDEN_DESCONOCIDA = "ORDEN_DESCONOCIDA";
 	}
+	
+	public static final String UNKNOWN = "UNKNOWN";
 }
