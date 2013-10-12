@@ -27,6 +27,11 @@ public class OrderResponseSearcher {
 				
 				finalResponse += 
 						getResponseByType(ResponseType.Order.ORDEN_CONOCIDA);
+				
+				// TODO: sacar esto cuando llevemos las acciones al servidor
+				message.addMetadata("orden_desconocida",
+						getResponseByType(ResponseType.Order.ORDEN_DESCONOCIDA)
+						.replace("%order%", message.getOrder()));
 				break;
 				
 			// Si el usuario solicita una accion desconocida

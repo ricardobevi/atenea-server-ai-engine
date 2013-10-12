@@ -24,20 +24,22 @@ public class AIAlgorithmTest {
 	public void searchResponse(Message message) {
 		AIEngineFacade aiEngineFacade = new AIEngineFacade();
 		Message output = aiEngineFacade.execute(message);
-		System.out.println("RESPUESTA FINAL: " + output.getText());
+		System.out.println("==== RESPUESTA FINAL: " + output.getText());
+		System.out.println("==== " + output.getMetadata("orden_desconocida"));
 	}
 	
-	@Test
+	//@Test
 	public void orderTest() {
 		searchResponse(new Message("Abrir programa"));
 		searchResponse(new Message("comenzar dictado"));
-		searchResponse(new Message("Cerrar programa."));
+		searchResponse(new Message("Cerrar programa"));
 		assertTrue(true);
 	}
 	
 	@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
+		searchResponse(new Message("Facundo"));
 		assertTrue(true);
 	}
 

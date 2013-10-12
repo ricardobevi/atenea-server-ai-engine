@@ -1,33 +1,35 @@
 package org.squadra.atenea.aiengine.semantic;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import org.squadra.atenea.aiengine.responses.ResponseType;
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.base.graph.Graph;
 import org.squadra.atenea.base.graph.Node;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
+import org.squadra.atenea.data.server.Neo4jServer;
 import org.squadra.atenea.parser.model.Sentence;
 import org.squadra.atenea.parser.model.SyntacticNode;
 import org.squadra.atenea.parser.model.Sentence.Type;
 
 public class SentenceClassifier {
 
-/**
- * Clasifica la oracion en PREGUNTA, DIALOGO, AFIRMACION u ORDEN
- * asignandole el type al objeto Sentence y devuelve un string con
- * el significado del mensaje.
- * @param sentence Oracion analizada sintacticamente.
- * @return Tipo de significado el mensaje del usuario.
- */
-public static String classify(Message message, Sentence sentence) {
+	/**
+	 * Clasifica la oracion en PREGUNTA, DIALOGO, AFIRMACION u ORDEN
+	 * asignandole el type al objeto Sentence y devuelve un string con
+	 * el significado del mensaje.
+	 * @param sentence Oracion analizada sintacticamente.
+	 * @return Tipo de significado el mensaje del usuario.
+	 */
+	public static String classify(Message message, Sentence sentence) {
 		
 		Type sentenceType = Type.UNKNOWN;
-		String userMessageType = "";
-		ArrayList<Word> words = sentence.getAllWords(false);
+		String userMessageType = UserMessageType.UNKNOWN;
 		
 		// Si la primera palabra es un verbo en infinitivo -> es una ORDEN
-		if (words.get(0).getMode().equals(WordTypes.Mode.INFINITIVE)) {
+		if (isOrder(sentence)) {
 			
 			sentenceType = Type.ORDER;
 			message.setOrder(sentence.toString());
@@ -35,23 +37,101 @@ public static String classify(Message message, Sentence sentence) {
 			// TODO: cuando mudemos las acciones al servidor, aca hay que validar
 			//       si es una accion conocida o desconocida
 			
-			userMessageType = UserMessageType.Order.ORDEN_DESCONOCIDA;
+			userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
 			
 			System.out.println("Clasificacion: ORDEN");
 		}
 		else {
 			
-			sentenceType = Type.DIALOG;
+			userMessageType = isDialog(sentence);
 			
-			// TODO: procesar tipo de mensaje para DIALOGOS
-			
-			userMessageType = UserMessageType.Dialog.SALUDO;
+			if (userMessageType != UserMessageType.UNKNOWN) {
+				sentenceType = Type.DIALOG;
+				System.out.println("Clasificacion: DIALOGO");
+			}
+			else {
+				sentenceType = Type.ASSERTION;
+				System.out.println("Clasificacion: AFIRMACION");
+			}
 		}
 		
 		sentence.setType(sentenceType);
 		
 		return userMessageType;
 	}
+
+
+	private static String isDialog(Sentence sentence) {
+		
+		ArrayList<Word> wordsInput = sentence.getAllWords(false);
+		
+		Iterator<Word> it = wordsInput.iterator();
+		while (it.hasNext()) {
+			Word word = it.next();
+			
+			System.out.println(word.getName());
+			
+			if (word.getName().matches("Atenea|atenea")) {
+				it.remove();
+			}
+		}
+		
+		ArrayList<ArrayList<Word>> sentencesOutput = Neo4jServer.dialogCache;
+		
+		//for (ArrayList<Word> sentenceOutput : sentencesOutput) {
+		
+		int i = 0;
+		Boolean flagContain = false;
+		
+		String sentenceInput = "";
+		for (Word word : wordsInput) {
+			sentenceInput += word.getName() + " ";
+		}
+		
+		String responseType = "";
+		
+		while ( !flagContain && i < sentencesOutput.size() ){
+			
+			String sentenceOutput = "";
+			responseType = sentencesOutput.get(i).get(0).getName();
+			
+			for (Word word : sentencesOutput.get(i)) {
+				sentenceOutput += word.getName() + " ";
+			}
+			
+			if( sentenceOutput.contains(sentenceInput) ){
+				flagContain = true;
+			}
+			
+			i++;
+		}
+		
+		String messageType;
+		
+		switch (responseType) {
+			case ResponseType.Dialog.SALUDO:
+				messageType = UserMessageType.UNKNOWN;
+				break;
+			
+			default:
+				messageType = UserMessageType.UNKNOWN;
+				break;
+		}
+		
+		return messageType;
+	}
+
+
+	private static boolean isOrder(Sentence sentence) {
+		
+		ArrayList<Word> words = sentence.getAllWords(false);
+		
+		if (words.get(0).getMode().equals(WordTypes.Mode.INFINITIVE)) {
+			return true;
+		}
+		return false;
+	}
+
 
 
 	@Deprecated
