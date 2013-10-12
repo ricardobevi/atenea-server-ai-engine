@@ -69,8 +69,6 @@ public class SentenceClassifier {
 		while (it.hasNext()) {
 			Word word = it.next();
 			
-			System.out.println(word.getName());
-			
 			if (word.getName().matches("Atenea|atenea")) {
 				it.remove();
 			}
@@ -78,29 +76,28 @@ public class SentenceClassifier {
 		
 		ArrayList<ArrayList<Word>> sentencesOutput = Neo4jServer.dialogCache;
 		
-		//for (ArrayList<Word> sentenceOutput : sentencesOutput) {
-		
-		int i = 0;
-		Boolean flagContain = false;
-		
 		String sentenceInput = "";
 		for (Word word : wordsInput) {
 			sentenceInput += word.getName() + " ";
 		}
 		
 		String responseType = "";
+		Boolean flagContain = false;
 		
+		int i = 0;
 		while ( !flagContain && i < sentencesOutput.size() ){
 			
 			String sentenceOutput = "";
-			responseType = sentencesOutput.get(i).get(0).getName();
 			
 			for (Word word : sentencesOutput.get(i)) {
 				sentenceOutput += word.getName() + " ";
 			}
 			
-			if( sentenceOutput.contains(sentenceInput) ){
+			// TODO: metodo toGoogleEntry en SimpleSentence
+			if( replaceAccents(sentenceOutput.toLowerCase()).contains(
+					replaceAccents(sentenceInput.toLowerCase())) ){
 				flagContain = true;
+				responseType = sentencesOutput.get(i).get(0).getName();
 			}
 			
 			i++;
@@ -110,9 +107,25 @@ public class SentenceClassifier {
 		
 		switch (responseType) {
 			case ResponseType.Dialog.SALUDO:
-				messageType = UserMessageType.UNKNOWN;
+				messageType = UserMessageType.Dialog.SALUDO;
+				break;
+				
+			case ResponseType.Dialog.DESPEDIDA:
+				messageType = UserMessageType.Dialog.DESPEDIDA;
 				break;
 			
+			case ResponseType.Dialog.PREGUNTA_ESTADO_ANIMO:
+				messageType = UserMessageType.Dialog.PREGUNTA_ESTADO_ANIMO;
+				break;
+				
+			case ResponseType.Dialog.PREGUNTA_NOMBRE:
+				messageType = UserMessageType.Dialog.PREGUNTA_NOMBRE;
+				break;
+				
+			case ResponseType.Dialog.PREGUNTA_EDAD:
+				messageType = UserMessageType.Dialog.PREGUNTA_EDAD;
+				break;
+				
 			default:
 				messageType = UserMessageType.UNKNOWN;
 				break;
@@ -133,6 +146,22 @@ public class SentenceClassifier {
 	}
 
 
+	
+	public static String replaceAccents(String input) {
+		
+		String original = "áàäéèëíìïóòöúùuñÁÀÄÉÈËÍÌÏÓÒÖÚÙÜÑçÇ";
+	    String ascii = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUNcC";
+	    String output = new String(input);
+	    
+	    for (int j = 0; j < original.length(); j++) {
+	        output = output.replace(original.charAt(j), ascii.charAt(j));
+	    }
+	    
+	    return output;
+	}
+	
+	
+	
 
 	@Deprecated
 	public static String classify2(Sentence sentence) {
