@@ -12,7 +12,6 @@ import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.data.query.DialogQuery;
 import org.squadra.atenea.data.server.Neo4jServer;
 import org.squadra.atenea.data.server.NeuralDataAccess;
-import org.squadra.atenea.parser.model.SimpleSentence;
 
 public class SentenceClassifierTest {
 
@@ -29,10 +28,12 @@ public class SentenceClassifierTest {
 	@Test
 	public void saludo() {
 		
-		ArrayList<SimpleSentence> sentences = Neo4jServer.dialogCache;
+		ArrayList<ArrayList<Word>> sentences = Neo4jServer.dialogCache;
 		
-		for (SimpleSentence sentence : sentences) {
-			System.out.println(sentence.toString());
+		for (ArrayList<Word> sentence : sentences) {
+			for (Word word : sentence) {
+				System.out.println(word.getName());
+			}
 		}
 		assertTrue(true);
 	}
