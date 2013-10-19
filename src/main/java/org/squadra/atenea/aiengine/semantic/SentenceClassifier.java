@@ -2,9 +2,12 @@ package org.squadra.atenea.aiengine.semantic;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.squadra.atenea.aiengine.responses.ResponseType;
 import org.squadra.atenea.ateneacommunication.Message;
+import org.squadra.atenea.base.actions.Click;
+import org.squadra.atenea.base.actions.ListOfAction;
 import org.squadra.atenea.base.graph.Graph;
 import org.squadra.atenea.base.graph.Node;
 import org.squadra.atenea.base.word.Word;
@@ -38,6 +41,11 @@ public class SentenceClassifier {
 			//       si es una accion conocida o desconocida
 			
 			userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+			
+			List<Click> lista = ListOfAction.getInstance().getAction(sentence.toString());
+			for (Click click : lista) {
+				message.setIcon(click.serialize());
+			}
 			
 			System.out.println("Clasificacion: ORDEN");
 		}
