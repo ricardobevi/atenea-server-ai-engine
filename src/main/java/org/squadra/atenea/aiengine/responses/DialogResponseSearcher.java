@@ -1,12 +1,9 @@
 package org.squadra.atenea.aiengine.responses;
 
-import java.util.ArrayList;
-
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
-import org.squadra.atenea.base.word.Word;
-import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.data.query.DialogQuery;
+import org.squadra.atenea.parser.model.SimpleSentence;
 
 public class DialogResponseSearcher {
 
@@ -162,19 +159,10 @@ public class DialogResponseSearcher {
 	public static String getResponseByType(String type) {
 		
 		DialogQuery dq = new DialogQuery();
-		ArrayList<Word> response = dq.findRandomSentenceByDialogType("dialogType", type);
+		SimpleSentence response = new SimpleSentence(
+				dq.findRandomSentenceByDialogType("dialogType", type));
 		
-		String responseText = "";
-		
-		for (Word word : response) {
-			if (word.getType().equals(WordTypes.Type.PUNCTUATION)) {
-				responseText += word.getName();
-			} else { 
-				responseText += " " + word.getName();
-			}
-		}
-		
-		return responseText.trim();
+		return response.toString();
 	}
 	
 	
