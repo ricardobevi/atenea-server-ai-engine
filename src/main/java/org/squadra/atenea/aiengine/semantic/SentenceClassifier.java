@@ -1,5 +1,6 @@
 package org.squadra.atenea.aiengine.semantic;
 
+import org.squadra.atenea.base.StringUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.data.server.Neo4jServer;
 import org.squadra.atenea.parser.model.Sentence;
+import org.squadra.atenea.parser.model.SimpleSentence;
 import org.squadra.atenea.parser.model.SyntacticNode;
 import org.squadra.atenea.parser.model.Sentence.Type;
 
@@ -77,47 +79,42 @@ public class SentenceClassifier {
 		return userMessageType;
 	}
 
-
+	/**
+	 * Indica si la oracion es una orden.
+	 * @param sentence
+	 * @return Si es un dialogo, devuelve el tipo de dialogo.
+	 *         Sino devuelve tipo desconocido (que no es dialogo).
+	 */
 	private static String isDialog(Sentence sentence) {
 		
-		ArrayList<Word> wordsInput = sentence.getAllWords(false);
+		SimpleSentence inputSentence = sentence.toSimpleSentence(false);
 		
-		Iterator<Word> it = wordsInput.iterator();
+		Iterator<Word> it = inputSentence.getWords().iterator();
 		while (it.hasNext()) {
 			Word word = it.next();
-			
-			System.out.println(word.getName());
 			
 			if (word.getName().matches("Atenea|atenea")) {
 				it.remove();
 			}
 		}
 		
-		ArrayList<ArrayList<Word>> sentencesOutput = Neo4jServer.dialogCache;
+		ArrayList<SimpleSentence> outputSentences = Neo4jServer.dialogCache;
 		
-		//for (ArrayList<Word> sentenceOutput : sentencesOutput) {
-		
-		int i = 0;
-		Boolean flagContain = false;
-		
-		String sentenceInput = "";
-		for (Word word : wordsInput) {
-			sentenceInput += word.getName() + " ";
-		}
+		String inputSentenceStr = inputSentence.toString();
 		
 		String responseType = "";
+		Boolean flagContain = false;
 		
-		while ( !flagContain && i < sentencesOutput.size() ){
+		int i = 0;
+		while ( !flagContain && i < outputSentences.size() ){
 			
-			String sentenceOutput = "";
-			responseType = sentencesOutput.get(i).get(0).getName();
+			String outputSentenceStr = outputSentences.toString();
 			
-			for (Word word : sentencesOutput.get(i)) {
-				sentenceOutput += word.getName() + " ";
-			}
-			
-			if( sentenceOutput.contains(sentenceInput) ){
+			// TODO: metodo toGoogleEntry en SimpleSentence
+			if( StringUtil.replaceAccents(outputSentenceStr.toLowerCase()).contains(
+					StringUtil.replaceAccents(inputSentenceStr.toLowerCase())) ){
 				flagContain = true;
+				responseType = outputSentences.get(i).getWords().get(0).getName();
 			}
 			
 			i++;
@@ -127,7 +124,23 @@ public class SentenceClassifier {
 		
 		switch (responseType) {
 			case ResponseType.Dialog.SALUDO:
-				messageType = UserMessageType.UNKNOWN;
+				messageType = UserMessageType.Dialog.SALUDO;
+				break;
+
+			case ResponseType.Dialog.DESPEDIDA:
+				messageType = UserMessageType.Dialog.DESPEDIDA;
+				break;
+
+			case ResponseType.Dialog.PREGUNTA_ESTADO_ANIMO:
+				messageType = UserMessageType.Dialog.PREGUNTA_ESTADO_ANIMO;
+				break;
+
+			case ResponseType.Dialog.PREGUNTA_NOMBRE:
+				messageType = UserMessageType.Dialog.PREGUNTA_NOMBRE;
+				break;
+
+			case ResponseType.Dialog.PREGUNTA_EDAD:
+				messageType = UserMessageType.Dialog.PREGUNTA_EDAD;
 				break;
 			
 			default:
@@ -138,7 +151,14 @@ public class SentenceClassifier {
 		return messageType;
 	}
 
+	
 
+
+	/**
+	 * Indica si la oracion es una orden.
+	 * @param sentence
+	 * @return true si es una orden, false si no lo el
+	 */
 	private static boolean isOrder(Sentence sentence) {
 		
 		ArrayList<Word> words = sentence.getAllWords(false);
