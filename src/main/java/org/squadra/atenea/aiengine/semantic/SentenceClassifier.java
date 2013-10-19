@@ -33,21 +33,30 @@ public class SentenceClassifier {
 		
 		// Si la primera palabra es un verbo en infinitivo -> es una ORDEN
 		if (isOrder(sentence)) {
-			
 			sentenceType = Type.ORDER;
 			message.setOrder(sentence.toString());
 			
-			// TODO: cuando mudemos las acciones al servidor, aca hay que validar
-			//       si es una accion conocida o desconocida
-			
-			userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+			//Se determina si la accion es conocida o no
 			
 			List<Click> lista = ListOfAction.getInstance().getAction(sentence.toString());
-			for (Click click : lista) {
-				message.setIcon(click.serialize());
+			//Accion conocida
+			if (lista != null)
+			{
+				message.setType(Message.ORDER);
+				userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+				System.out.println("Clasificacion: ORDEN CONOCIDA");
+				for (Click click : lista) 
+				{
+					message.setIcon(click.serialize());
+				}
+			}
+			else //Accion desconocida
+			{
+				message.setType(Message.LEARN_ACTION);
+				System.out.println("Clasificacion: ORDEN DESCONOCIDA");
+				userMessageType = UserMessageType.Order.ORDEN_DESCONOCIDA;
 			}
 			
-			System.out.println("Clasificacion: ORDEN");
 		}
 		else {
 			
