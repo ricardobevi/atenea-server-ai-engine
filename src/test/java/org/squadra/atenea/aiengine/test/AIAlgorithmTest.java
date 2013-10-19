@@ -11,9 +11,11 @@ import org.squadra.atenea.data.server.NeuralDataAccess;
 
 public class AIAlgorithmTest {
 
+	private static AIEngineFacade aiEngineFacade;
+	
 	@BeforeClass
 	public static void initDataBase() {
-		NeuralDataAccess.init();
+		aiEngineFacade = new AIEngineFacade();
 	}
 	
 	@AfterClass
@@ -22,7 +24,6 @@ public class AIAlgorithmTest {
 	}
 	
 	public void searchResponse(Message message) {
-		AIEngineFacade aiEngineFacade = new AIEngineFacade();
 		Message output = aiEngineFacade.execute(message);
 		System.out.println("======= MENSAJE ENTRANTE: " + message.getText());
 		System.out.println("======= RESPUESTA FINAL: " + output.getText());
@@ -40,7 +41,7 @@ public class AIAlgorithmTest {
 	@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
-		searchResponse(new Message("hola Atenea"));
+		searchResponse(new Message("hola Atenea saludame"));
 		searchResponse(new Message("Buenos días Atenea"));
 		searchResponse(new Message("Buenos dias Atenea"));
 		searchResponse(new Message("Atenea buenas noches"));
