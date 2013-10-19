@@ -11,10 +11,12 @@ import org.squadra.atenea.data.server.NeuralDataAccess;
 
 public class AIAlgorithmTest {
 
+	private static AIEngineFacade aiEngineFacade;
+	
 	@BeforeClass
 	public static void initDataBase() {
-		NeuralDataAccess.init();
-	}
+		aiEngineFacade = new AIEngineFacade();
+		}
 	
 	@AfterClass
 	public static void stopDataBase() {
@@ -22,10 +24,11 @@ public class AIAlgorithmTest {
 	}
 	
 	public void searchResponse(Message message) {
-		AIEngineFacade aiEngineFacade = new AIEngineFacade();
 		Message output = aiEngineFacade.execute(message);
-		System.out.println("==== RESPUESTA FINAL: " + output.getText());
-		System.out.println("==== " + output.getMetadata("orden_desconocida"));
+		System.out.println("======= MENSAJE ENTRANTE: " + message.getText());
+		System.out.println("======= RESPUESTA FINAL: " + output.getText());
+		System.out.println("======= " + output.getMetadata("orden_desconocida"));
+		
 	}
 	
 	//@Test
@@ -39,8 +42,22 @@ public class AIAlgorithmTest {
 	@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
+		searchResponse(new Message("hola Atenea saludame"));
+		searchResponse(new Message("Buenos días Atenea"));
+		searchResponse(new Message("Buenos dias Atenea"));
+		searchResponse(new Message("Atenea buenas noches"));
 		searchResponse(new Message("Facundo"));
-		assertTrue(true);
+		searchResponse(new Message("Cómo estás"));
+		searchResponse(new Message("Como andas Atenea"));
+		searchResponse(new Message("qué onda"));
+		searchResponse(new Message("hola Atenea cómo estás"));
+		searchResponse(new Message("Nos vemos"));
+		searchResponse(new Message("Chau Atenea"));
+		searchResponse(new Message("adios"));
+		searchResponse(new Message("cual es tu nombre"));
+		searchResponse(new Message("Cómo te llamás"));
+		searchResponse(new Message("Quién sos"));
+		searchResponse(new Message("Cuántos años tenés"));		assertTrue(true);
 	}
 
 }
