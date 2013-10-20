@@ -6,7 +6,6 @@ import lombok.extern.log4j.Log4j;
 import org.squadra.atenea.aiengine.algorithm.AIAlgorithm;
 import org.squadra.atenea.aiengine.algorithm.AbstractAlgorithm;
 import org.squadra.atenea.aiengine.algorithm.LearnActionAlgorithm;
-import org.squadra.atenea.aiengine.algorithm.VerySimpleResponseAlgorithm;
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 
@@ -44,7 +43,7 @@ public class AIEngineFacade {
 		if ( this.isDBStarted == false ){
 			//inicia la bd si no esta iniciada.
 			NeuralDataAccess.init();
-			NeuralDataAccess.loadCache();
+			//NeuralDataAccess.loadCache();
 			this.isDBStarted = true;
 		}
 		

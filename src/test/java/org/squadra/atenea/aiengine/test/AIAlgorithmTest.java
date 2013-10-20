@@ -16,7 +16,7 @@ public class AIAlgorithmTest {
 	@BeforeClass
 	public static void initDataBase() {
 		aiEngineFacade = new AIEngineFacade();
-		}
+	}
 	
 	@AfterClass
 	public static void stopDataBase() {
@@ -39,7 +39,7 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	@Test
+	//@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
 		searchResponse(new Message("hola Atenea saludame"));
@@ -57,7 +57,14 @@ public class AIAlgorithmTest {
 		searchResponse(new Message("cual es tu nombre"));
 		searchResponse(new Message("Cómo te llamás"));
 		searchResponse(new Message("Quién sos"));
-		searchResponse(new Message("Cuántos años tenés"));		assertTrue(true);
+		searchResponse(new Message("Cuántos años tenés"));
+		assertTrue(true);
+	}
+	
+	@Test
+	public void questionTest() {
+		searchResponse(new Message("dónde Argentina Chile Perú"));
+		assertTrue(true);
 	}
 
 }

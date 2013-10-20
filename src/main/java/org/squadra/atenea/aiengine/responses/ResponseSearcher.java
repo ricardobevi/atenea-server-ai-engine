@@ -11,16 +11,21 @@ import org.squadra.atenea.parser.model.Sentence;
  */
 public class ResponseSearcher {
 
-	public static void execute(Message message, Sentence.Type sentenceType, String inputMessageType) {
+	public static void execute(Message message, Sentence sentence, String inputMessageType) {
 		
 		String responseText;
 		int responseType;
 		
-		switch (sentenceType) {
+		switch (sentence.getType()) {
 		
 			case DIALOG:
 				responseText = DialogResponseSearcher.getRandomResponse(message ,inputMessageType);
 				responseType = Message.DIALOG;
+				break;
+			
+			case QUESTION:
+				responseText = QuestionResponseSearcher.getResponse(message, inputMessageType, sentence);
+				responseType = Message.QUESTION;
 				break;
 			
 			case ORDER:

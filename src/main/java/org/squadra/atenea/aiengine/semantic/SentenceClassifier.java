@@ -60,6 +60,15 @@ public class SentenceClassifier {
 			}
 			
 		}
+		
+		else if (isQuestion(sentence)) {
+
+			sentenceType = Type.QUESTION;
+			userMessageType = UserMessageType.Question.QUESTION;
+			System.out.println("Clasificacion: PREGUNTA");
+			
+		}
+		
 		else {
 			
 			userMessageType = isDialog(sentence);
@@ -78,6 +87,24 @@ public class SentenceClassifier {
 		
 		return userMessageType;
 	}
+
+	/**
+	 * 
+	 * @param sentence
+	 * @return
+	 */
+	private static boolean isQuestion(Sentence sentence) {
+		
+		ArrayList<Word> words = sentence.getAllWords(false);
+		
+		// TODO: comparar por lista de palabras y tipo devuelto por la gramatica
+		
+		if (words.get(0).getName().matches("donde|dónde")) {
+			return true;
+		}
+		return false;
+	}
+
 
 	/**
 	 * Indica si la oracion es una orden.

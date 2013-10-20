@@ -34,7 +34,7 @@ public class AIAlgorithm implements AbstractAlgorithm {
 		String userMessageType = SemanticAnalizer.execute(outputMessage, syntacticSentence);
 		
 		// Ejecuto la busqueda de respuestas
-		ResponseSearcher.execute(outputMessage, syntacticSentence.getType(), userMessageType);
+		ResponseSearcher.execute(outputMessage, syntacticSentence, userMessageType);
 		
 		System.out.println("ORDEN: " + outputMessage.getOrder());
 		
