@@ -30,7 +30,7 @@ public class ResponseSearcher {
 			
 			case ORDER:
 				responseText = OrderResponseSearcher.getRandomResponse(message, inputMessageType);
-				responseType = Message.ORDER;
+				responseType = message.getType();
 				break;
 				
 			default:
