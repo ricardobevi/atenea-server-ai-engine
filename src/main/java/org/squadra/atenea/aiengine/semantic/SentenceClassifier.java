@@ -35,8 +35,8 @@ public class SentenceClassifier {
 		
 		// Si la primera palabra es un verbo en infinitivo -> es una ORDEN
 		if (isOrder(sentence)) {
-			sentenceType = Type.ORDER;
 			message.setOrder(sentence.toString());
+			sentenceType = Type.ORDER;
 			
 			//Se determina si la accion es conocida o no
 			
@@ -51,6 +51,16 @@ public class SentenceClassifier {
 				{
 					message.setIcon(click.serialize());
 				}
+			}
+			//Si es una accion precargada o comando
+			else if ( ListOfAction.getInstance().getPreLoadAction(sentence.toString()) != null 
+					|| ListOfAction.getInstance().getCommand(sentence.toString()) != null )
+			{
+System.out.println(ListOfAction.getInstance().getPreLoadAction(sentence.toString()));
+System.out.println(ListOfAction.getInstance().getCommand(sentence.toString()));
+				message.setType(Message.PRELOAD_ACTION);
+				userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+				System.out.println("Clasificacion: PRECARGADA o COMANDO");
 			}
 			else //Accion desconocida
 			{
@@ -81,10 +91,10 @@ public class SentenceClassifier {
 				sentenceType = Type.ASSERTION;
 				System.out.println("Clasificacion: AFIRMACION");
 			}
+			
 		}
 		
 		sentence.setType(sentenceType);
-		
 		return userMessageType;
 	}
 
