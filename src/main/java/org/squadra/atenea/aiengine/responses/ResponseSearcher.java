@@ -1,5 +1,7 @@
 package org.squadra.atenea.aiengine.responses;
 
+import lombok.extern.log4j.Log4j;
+
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.parser.model.Sentence;
 
@@ -9,9 +11,12 @@ import org.squadra.atenea.parser.model.Sentence;
  * @author Leandro Morrone
  *
  */
+@Log4j
 public class ResponseSearcher {
 
 	public static void execute(Message message, Sentence sentence, String inputMessageType) {
+		
+		log.debug("Buscando respuesta...");
 		
 		String responseText;
 		int responseType;
@@ -41,5 +46,7 @@ public class ResponseSearcher {
 		
 		message.setText(responseText);
 		message.setType(responseType);
+		
+		log.debug("Devolviendo respuesta...");
 	}
 }

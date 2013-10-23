@@ -1,9 +1,11 @@
 package org.squadra.atenea.aiengine.syntactic;
 
+import lombok.extern.log4j.Log4j;
+
 import org.squadra.atenea.parser.Parser;
 import org.squadra.atenea.parser.model.Sentence;
 
-
+@Log4j
 public class SyntacticAnalizer {
 
 	/**
@@ -13,6 +15,8 @@ public class SyntacticAnalizer {
 	 * @return Arbol sintactico con la estructura de la oracion y las palabras clasificadas.
 	 */
 	public static Sentence execute(String inputSentence) {
+		
+		log.debug("Ejecutando analizador sintactico...");
 		
 		//TODO: Pre-parsing (identificar los verbos imperativos desde la BD neuronal)
 		
