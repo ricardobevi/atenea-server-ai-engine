@@ -29,7 +29,10 @@ public class UserMessageType {
 	
 	public static class Question {
 		
-		public static final String QUESTION = "QUESTION";
+		public static final String QUIEN = "QUIEN";
+		public static final String CUANDO = "CUANDO";
+		public static final String DONDE = "DONDE";
+		public static final String QUE = "QUE";
 	}
 	
 	public static final String UNKNOWN = "UNKNOWN";

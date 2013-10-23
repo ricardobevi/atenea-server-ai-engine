@@ -12,7 +12,7 @@ public class QuestionResponseSearcher {
 	public static String getResponse(Message message, String inputMessageType,
 			Sentence sentence) {
 
-		// TODO: Obtener sustantivos
+		// TODO: Segun el inputMessageType (donde, quien, cuando, etc) buscar diferentes cosas
 		
 		ArrayList<String> words = new ArrayList<>(
 				Arrays.asList(sentence.toSimpleSentence(true).toString().split(" "))

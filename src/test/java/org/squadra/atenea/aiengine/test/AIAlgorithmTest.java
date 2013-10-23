@@ -63,7 +63,15 @@ public class AIAlgorithmTest {
 	
 	@Test
 	public void questionTest() {
-		searchResponse(new Message("dónde Argentina Chile Perú"));
+		searchResponse(new Message("dónde independencias Argentina Chile Perú"));
+		searchResponse(new Message("Donde independencias Argentina Chile Perú"));
+		searchResponse(new Message("qué independencias Argentina Chile Perú"));
+		searchResponse(new Message("Que es independencias Argentina Chile Perú"));
+		searchResponse(new Message("cuando independencias Argentina Chile Perú"));
+		searchResponse(new Message("Quién independencias Argentina Chile Perú"));
+		searchResponse(new Message("por qué independencias Argentina Chile Perú"));
+		searchResponse(new Message("salir volando"));
+		searchResponse(new Message("Hola"));
 		assertTrue(true);
 	}
 
