@@ -3,27 +3,74 @@ package org.squadra.atenea.aiengine.responses;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
+import org.squadra.atenea.base.word.Word;
+import org.squadra.atenea.data.query.DialogQuery;
 import org.squadra.atenea.data.query.QuestionQuery;
+import org.squadra.atenea.parser.Parser;
 import org.squadra.atenea.parser.model.Sentence;
+import org.squadra.atenea.parser.model.SimpleSentence;
 
 public class QuestionResponseSearcher {
 
 	public static String getResponse(Message message, String inputMessageType,
 			Sentence sentence) {
 
-		// TODO: Segun el inputMessageType (donde, quien, cuando, etc) buscar diferentes cosas
+		ArrayList<Word> nounsWords = sentence.getNouns();
+		ArrayList<String> nounsStrings = new ArrayList<>();
 		
-		ArrayList<String> words = new ArrayList<>(
-				Arrays.asList(sentence.toSimpleSentence(true).toString().split(" "))
-				);
+		ArrayList<Word> verbsWords = sentence.getMainVerbs();
+		ArrayList<String> verbsStrings = new ArrayList<>();
 		
-		words.remove(0);
+		for (Word noun : nounsWords) {
+			System.out.println("Sustantivo: " + noun.getName());
+			nounsStrings.add(noun.getName());
+		}
 		
-		return getAnswerByWords(words);
+		for (Word verb : verbsWords) {
+			System.out.println("Verbo: " + verb.getName());
+			verbsStrings.add(verb.getName());
+		}
+		
+		String answer = "No tengo esa informacion.";
+		
+		// Armo la respuesta segun el tipo de pregunta ingresada
+		
+		switch (inputMessageType) {
+		
+			case UserMessageType.Question.QUIEN:
+				
+				try {
+					answer = getAnswerByWords(nounsStrings);
+					Sentence parsedAnswer = new Parser().parse(answer);
+					
+					answer = parsedAnswer.getSubjects().get(0).getProperNouns().get(0).getName();
+				}
+				catch (Exception e) {}
+				break;
+			
+			case UserMessageType.Question.CUANDO:
+				
+				try {
+					nounsStrings.addAll(verbsStrings);
+					answer = getAnswerByWords(nounsStrings);
+					Sentence parsedAnswer = new Parser().parse(answer);
+					
+					answer = parsedAnswer.getSubjects().get(0).getProperNouns().get(0).getName();
+				}
+				catch (Exception e) {}
+				break;	
+				
+			default:
+				break;
+		}
+		
+		
+		
+		return answer;
 		
 	}
-	
 	
 	
 	/**
@@ -34,7 +81,7 @@ public class QuestionResponseSearcher {
 	public static String getAnswerByWords(ArrayList<String> words) {
 		
 		QuestionQuery qq = new QuestionQuery();
-		String response = qq.findAnswer(words);
+		SimpleSentence response = new SimpleSentence(qq.findAnswer(words));
 		
 		return response.toString();
 	}

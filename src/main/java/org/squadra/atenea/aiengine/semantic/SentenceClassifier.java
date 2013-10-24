@@ -151,11 +151,8 @@ public class SentenceClassifier {
 		else if (questionWord.toLowerCase().matches("cuándo")) {
 			messageType = UserMessageType.Question.CUANDO;
 		}
-		else if (questionWord.toLowerCase().matches("dónde")) {
-			messageType = UserMessageType.Question.DONDE;
-		}
-		else if (questionWord.toLowerCase().matches("dónde")) {
-			messageType = UserMessageType.Question.DONDE;
+		else if (questionWord.toLowerCase().matches("quién")) {
+			messageType = UserMessageType.Question.QUIEN;
 		}
 		else if (questionWord.toLowerCase().matches("qué")) {
 			messageType = UserMessageType.Question.QUE;
