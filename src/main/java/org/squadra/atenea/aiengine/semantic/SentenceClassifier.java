@@ -46,19 +46,28 @@ public class SentenceClassifier {
 			
 			//Se determina si la accion es conocida o no
 			
-			String orderName = !sentence.getMainVerbs().isEmpty() ? sentence.getMainVerbs().get(0).getBaseWord() + " ": "";
+			String orderName = new String() ;
+			
+			for( Word element : sentence.getMainVerbs() ){
+				
+				if( !containsDesireExpression( element.getBaseWord() ) ){
+					orderName += element.getBaseWord() + " ";
+				}
+				
+			}
+			
 			
 			for( Word element : sentence.getNouns() ){
 				
 				//TODO: Este conjunto de palabras en el if deberia ser un metodo isValidNoun4Order
 				if( !element.getName().toLowerCase().equals("atenea") &&
 				    !element.getName().toLowerCase().equals("favor") ){
-					orderName += element.getName();
+					orderName += element.getName() + " ";
 				}
 				
 			}
 			
-			System.out.println(orderName);
+			System.out.println("OrderName: " + orderName);
 			message.setOrder(orderName);
 			
 			List<Click> lista = ListOfAction.getInstance().getAction(orderName);
