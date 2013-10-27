@@ -85,26 +85,26 @@ public class SentenceClassifier {
 		
 		else {
 			
-			// VERIFICO SI ES UNA PREGUNTA
-			log.debug("Verificando si es una pregunta...");
+			// VERIFICO SI ES UN DIALOGO
+			log.debug("Verificando si es un dialogo...");
 			
-			userMessageType = isQuestion(sentence);
+			userMessageType = isDialog(sentence);
 			
 			if (userMessageType != UserMessageType.UNKNOWN) {
-				sentenceType = Type.QUESTION;
-				log.debug("Clasificacion: PREGUNTA");
+				sentenceType = Type.DIALOG;
+				log.debug("Clasificacion: DIALOGO");
 			}
 		
 			else {
 				
-				// VERIFICO SI ES UN DIALOGO
-				log.debug("Verificando si es un dialogo...");
+				// VERIFICO SI ES UNA PREGUNTA
+				log.debug("Verificando si es una pregunta...");
 				
-				userMessageType = isDialog(sentence);
+				userMessageType = isQuestion(sentence);
 				
 				if (userMessageType != UserMessageType.UNKNOWN) {
-					sentenceType = Type.DIALOG;
-					log.debug("Clasificacion: DIALOGO");
+					sentenceType = Type.QUESTION;
+					log.debug("Clasificacion: PREGUNTA");
 				}
 				
 				// SINO POR DEFECTO ES UNA AFIRMACION
@@ -201,7 +201,7 @@ public class SentenceClassifier {
 		int i = 0;
 		while ( !flagContain && i < outputSentences.size() ){
 			
-			String outputSentenceStr = outputSentences.toString();
+			String outputSentenceStr = outputSentences.get(i).toString();
 			
 			// TODO: metodo toGoogleEntry en SimpleSentence
 			if( StringUtil.replaceAccents(outputSentenceStr.toLowerCase()).contains(

@@ -51,23 +51,22 @@ public class QuestionResponseSearcher {
 				break;
 			
 			case UserMessageType.Question.CUANDO:
+			case UserMessageType.Question.DONDE:
 				
 				try {
 					nounsStrings.addAll(verbsStrings);
 					answer = getAnswerByWords(nounsStrings);
 					Sentence parsedAnswer = new Parser().parse(answer);
 					
-					answer = parsedAnswer.getSubjects().get(0).getProperNouns().get(0).getName();
+					answer = parsedAnswer.toSimpleSentence(true).toString();
 				}
 				catch (Exception e) {}
-				break;	
+				break;
 				
 			default:
 				break;
 		}
-		
-		
-		
+
 		return answer;
 		
 	}
@@ -81,7 +80,14 @@ public class QuestionResponseSearcher {
 	public static String getAnswerByWords(ArrayList<String> words) {
 		
 		QuestionQuery qq = new QuestionQuery();
-		SimpleSentence response = new SimpleSentence(qq.findAnswer(words));
+		
+		ArrayList<SimpleSentence> answers = qq.findAnswers(words);
+		
+		for (SimpleSentence answer : answers) {
+			System.out.println(answer);
+		}
+		
+		SimpleSentence response = answers.get(0);
 		
 		return response.toString();
 	}
