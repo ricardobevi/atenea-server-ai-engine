@@ -21,6 +21,7 @@ import org.squadra.atenea.parser.model.Sentence;
 import org.squadra.atenea.parser.model.SimpleSentence;
 import org.squadra.atenea.parser.model.SyntacticNode;
 import org.squadra.atenea.parser.model.Sentence.Type;
+import org.squadra.atenea.wordclassifier.WordClassifier;
 
 @Log4j
 public class SentenceClassifier {
@@ -41,12 +42,35 @@ public class SentenceClassifier {
 		log.debug("Verificando si es una orden...");
 		
 		if (isOrder(sentence)) {
-			message.setOrder(sentence.toString());
 			sentenceType = Type.ORDER;
 			
 			//Se determina si la accion es conocida o no
 			
-			List<Click> lista = ListOfAction.getInstance().getAction(sentence.toString());
+			String orderName = new String() ;
+			
+			for( Word element : sentence.getMainVerbs() ){
+				
+				if( !containsDesireExpression( element.getBaseWord() ) ){
+					orderName += element.getBaseWord() + " ";
+				}
+				
+			}
+			
+			
+			for( Word element : sentence.getNouns() ){
+				
+				//TODO: Este conjunto de palabras en el if deberia ser un metodo isValidNoun4Order
+				if( !element.getName().toLowerCase().equals("atenea") &&
+				    !element.getName().toLowerCase().equals("favor") ){
+					orderName += element.getName() + " ";
+				}
+				
+			}
+			
+			System.out.println("OrderName: " + orderName);
+			message.setOrder(orderName);
+			
+			List<Click> lista = ListOfAction.getInstance().getAction(orderName);
 			
 			//Accion conocida
 			if (lista != null)
@@ -62,11 +86,11 @@ public class SentenceClassifier {
 			}
 			
 			//Si es una accion precargada o comando
-			else if ( ListOfAction.getInstance().getPreLoadAction(sentence.toString()) != null 
-					|| ListOfAction.getInstance().getCommand(sentence.toString()) != null )
+			else if ( ListOfAction.getInstance().getPreLoadAction(orderName) != null 
+					|| ListOfAction.getInstance().getCommand(orderName) != null )
 			{
-				System.out.println(ListOfAction.getInstance().getPreLoadAction(sentence.toString()));
-				System.out.println(ListOfAction.getInstance().getCommand(sentence.toString()));
+				System.out.println(ListOfAction.getInstance().getPreLoadAction(orderName));
+				System.out.println(ListOfAction.getInstance().getCommand(orderName));
 				
 				message.setType(Message.PRELOAD_ACTION);
 				userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
@@ -251,16 +275,91 @@ public class SentenceClassifier {
 	 */
 	private static boolean isOrder(Sentence sentence) {
 		
-		ArrayList<Word> words = sentence.getAllWords(false);
+		ArrayList<Word> allWords = sentence.getAllWords(false);
+		ArrayList<Sentence> allVerbs = sentence.getVerbs();
+		ArrayList<Word> mainVerbs =  sentence.getMainVerbs();
 		
-		// Si la primera palabra es un verbo infinitivo -> en ORDEN
+		Boolean isOrder = false; 
 		
-		if (words.get(0).getMode().equals(WordTypes.Mode.INFINITIVE)) {
-			return true;
+		System.out.println( "---------- ES ORDEN ---------" );
+		
+		//comienza con un infinitivo
+		if( allWords.get(0).getMode().equals(WordTypes.Mode.INFINITIVE) ){
+			System.out.println( "---------- ES INFINITIVO ---------" );
+			isOrder = true;
 		}
-		return false;
+			
+		
+		//contiene expresion de deseo
+		if( !isOrder &&  !allVerbs.isEmpty() ){
+			
+			Sentence Verbs = allVerbs.get(0);
+			
+			for (Word word : Verbs.getAllWords(false) ) {
+				
+				for (Word verb : mainVerbs ) {
+					
+					System.out.println( "Es Deseo: " + word.getName() + " - MainVerb " + verb.getName() ); 
+					if ( containsDesireExpression( word.getBaseWord() ) &&  !word.getName().equals( verb.getName())  ) {
+						
+						System.out.println( "---------- ES EXPRESION DE DESEO ---------: "  );
+						isOrder = true;
+					}
+				}
+					
+			}
+		}
+		
+		//empieza con imperativo
+		if( !isOrder &&  !allVerbs.isEmpty() ){
+			WordClassifier classifier = new WordClassifier();
+			
+			//TODO: se podria hacer que isImperative tome el verbo base y el conjugado, 
+			//      asi sabe donde ir a busar en la RAE. Tmb hay que ver que saltee el Atenea y el por favor
+			
+			Sentence Verbs = allVerbs.get(0);
+			
+			for (Word word : Verbs.getAllWords(false) ) {
+				if ( !classifier.isImperative( word.getName() ).equals("") ) {
+					System.out.println( "---------- ES IMPERATIVO ---------" );
+					isOrder = true;
+				}
+			}
+
+		}
+		
+		//TODO: El verbo es imperativo con me
+		
+		
+		return isOrder;
+		
 	}
 
+
+
+	private static boolean containsDesireExpression(String verb) {
+		
+		boolean isDesireExpression = false;
+		
+		System.out.println("containsDesireExpression: contiene expresion de deseo?: " +  verb);
+		
+		ArrayList<String> desireExpressions = new ArrayList<String>();
+		desireExpressions.add("gustar");
+		desireExpressions.add("querer");
+		desireExpressions.add("poder");
+		desireExpressions.add("necesitar");
+
+		for (String desireExpression : desireExpressions) {
+			
+			if( verb.equals( desireExpression ) ){
+				isDesireExpression = true;
+			}
+			
+		}
+		
+		
+		return isDesireExpression;
+	}
 
 
 	@Deprecated
