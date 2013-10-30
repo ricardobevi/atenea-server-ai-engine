@@ -35,9 +35,12 @@ public class ResponseType {
 		public static final String ORDEN_CONOCIDA = "$_ORDEN_CONOCIDA";
 		public static final String ORDEN_DESCONOCIDA = "$_ORDEN_DESCONOCIDA";
 	}
-	
-	public static class Assertion {
+
+	public static class Default {
 		
-		public static final String AFFIRMATION = "$_AFIRMACION";
+		public static final String AFFIRMATION = "$_RESPUESTA_AFIRMACION";
+		public static final String FALTA_INFORMACION = "$_FALTA_INFORMACION";
+		public static final String BUSQUEDA_EN_GOOGLE = "$_BUSQUEDA_EN_GOOGLE";
+		public static final String NO_ENTIENDO = "$_NO_ENTIENDO";
 	}
 }

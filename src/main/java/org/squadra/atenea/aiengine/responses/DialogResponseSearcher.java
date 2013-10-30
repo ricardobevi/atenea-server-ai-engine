@@ -1,13 +1,8 @@
 package org.squadra.atenea.aiengine.responses;
 
-import java.util.ArrayList;
-
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
-import org.squadra.atenea.base.word.Word;
-import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.data.query.DialogQuery;
-import org.squadra.atenea.parser.model.SimpleSentence;
 
 public class DialogResponseSearcher {
 
@@ -19,9 +14,15 @@ public class DialogResponseSearcher {
 	public static String getRandomResponse(Message message, String inputMessageType) {
 		
 		// TODO: tomar estos datos del cliente
-		String userName = "Leandro";
+		
+		// Obtengo el nombre del usuario
+		String userName = message.getMetadata("userName");
+		if (userName == null) {
+			userName = "?";
+		}
+		
 		String systemName = "Atenea";
-		String systemAge = "4 meses";
+		String systemAge = "5 meses";
 		
 		String finalResponse = "";
 		Integer randomInt1 = (int) Math.round(Math.random() * 100);
@@ -128,6 +129,13 @@ public class DialogResponseSearcher {
 				break;
 				
 			// Si el usuario le pregunta a Atenea que esta haciendo
+			case UserMessageType.Dialog.RESPUESTA_NOMBRE_USUARIO:
+				
+				finalResponse += 
+						getResponseByType(ResponseType.Dialog.RESPUESTA_A_NOMBRE_USUARIO);
+				break;
+								
+			// Si el usuario le pregunta a Atenea que esta haciendo
 			case UserMessageType.Dialog.DESPEDIDA:
 				
 				finalResponse += 
@@ -163,12 +171,7 @@ public class DialogResponseSearcher {
 	public static String getResponseByType(String type) {
 		
 		DialogQuery dq = new DialogQuery();
-		SimpleSentence response = new SimpleSentence(
-				dq.findRandomSentenceByDialogType("dialogType", type));
-		
-		return response.toString();
+		return dq.findRandomSentenceByDialogType("dialogType", type).toString();
 	}
-	
-	
 	
 }

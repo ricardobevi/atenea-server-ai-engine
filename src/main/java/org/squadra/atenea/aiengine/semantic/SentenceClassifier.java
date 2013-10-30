@@ -195,6 +195,7 @@ public class SentenceClassifier {
 	private static String isDialog(Sentence sentence) {
 		
 		String messageType = UserMessageType.UNKNOWN;
+		
 		SimpleSentence inputSentence = sentence.toSimpleSentence(false);
 		ArrayList<SimpleSentence> outputSentences;
 		
@@ -212,6 +213,9 @@ public class SentenceClassifier {
 			
 			if (word.getName().matches("Atenea|atenea")) {
 				it.remove();
+			}
+			else if (word.getType() == WordTypes.Type.PROPER_NAME) {
+				word.setName("%nombre%");
 			}
 		}
 		
@@ -256,6 +260,10 @@ public class SentenceClassifier {
 
 			case ResponseType.Dialog.PREGUNTA_EDAD:
 				messageType = UserMessageType.Dialog.PREGUNTA_EDAD;
+				break;
+				
+			case ResponseType.Dialog.RESPUESTA_NOMBRE_ATENEA:
+				messageType = UserMessageType.Dialog.RESPUESTA_NOMBRE_USUARIO;
 				break;
 			
 			default:

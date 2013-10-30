@@ -39,7 +39,7 @@ public class ResponseSearcher {
 				break;
 				
 			default:
-				responseText = "Disculpa, no logro entenderte.";
+				responseText = AssertionAndDefaultSearcher.getResponseByType(ResponseType.Default.AFFIRMATION);
 				responseType = Message.UNKNOWN;
 				break;
 		}
