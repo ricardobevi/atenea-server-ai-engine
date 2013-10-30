@@ -1,13 +1,8 @@
 package org.squadra.atenea.aiengine.responses;
 
-import java.util.ArrayList;
-
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
-import org.squadra.atenea.base.word.Word;
-import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.data.query.DialogQuery;
-import org.squadra.atenea.parser.model.SimpleSentence;
 
 public class OrderResponseSearcher {
 
@@ -28,11 +23,6 @@ public class OrderResponseSearcher {
 				
 				finalResponse += 
 						getResponseByType(ResponseType.Order.ORDEN_CONOCIDA);
-				
-				// TODO: sacar esto cuando llevemos las acciones al servidor
-				message.addMetadata("orden_desconocida",
-						getResponseByType(ResponseType.Order.ORDEN_DESCONOCIDA)
-						.replace("%order%", message.getOrder()));
 				break;
 				
 			// Si el usuario solicita una accion desconocida
@@ -64,8 +54,6 @@ public class OrderResponseSearcher {
 	public static String getResponseByType(String type) {
 		
 		DialogQuery dq = new DialogQuery();
-		SimpleSentence response = new SimpleSentence(dq.findRandomSentenceByDialogType("orderType", type));
-		
-		return response.toString();
+		return dq.findRandomSentenceByDialogType("orderType", type).toString();
 	}
 }

@@ -1,12 +1,10 @@
 package org.squadra.atenea.aiengine.responses;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.base.word.Word;
-import org.squadra.atenea.data.query.DialogQuery;
 import org.squadra.atenea.data.query.QuestionQuery;
 import org.squadra.atenea.parser.Parser;
 import org.squadra.atenea.parser.model.Sentence;
@@ -47,7 +45,9 @@ public class QuestionResponseSearcher {
 					
 					answer = parsedAnswer.getSubjects().get(0).getProperNouns().get(0).getName();
 				}
-				catch (Exception e) {}
+				catch (Exception e) {
+					answer = getGoogleAnswer(message, sentence);
+				}
 				break;
 			
 			case UserMessageType.Question.CUANDO:
@@ -60,10 +60,13 @@ public class QuestionResponseSearcher {
 					
 					answer = parsedAnswer.toSimpleSentence(true).toString();
 				}
-				catch (Exception e) {}
+				catch (Exception e) {
+					answer = getGoogleAnswer(message, sentence);
+				}
 				break;
 				
 			default:
+				answer = getGoogleAnswer(message, sentence);
 				break;
 		}
 
@@ -90,6 +93,27 @@ public class QuestionResponseSearcher {
 		SimpleSentence response = answers.get(0);
 		
 		return response.toString();
+	}
+	
+	
+	/**
+	 * 
+	 * @param message
+	 * @param sentence
+	 * @return
+	 */
+	public static String getGoogleAnswer(Message message, Sentence sentence) {
+		
+		//TODO: cambiar segun facu
+		message.setOrder("buscar en google " + sentence.toSimpleSentence(true));
+		message.setType(Message.PRELOAD_ACTION);
+		
+		String googleAnswer = 
+				AssertionAndDefaultSearcher.getResponseByType(ResponseType.Default.FALTA_INFORMACION)
+				.replace(".", ",") + " " +
+				AssertionAndDefaultSearcher.getResponseByType(ResponseType.Default.BUSQUEDA_EN_GOOGLE);
+		
+		return googleAnswer;
 	}
 
 }

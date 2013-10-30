@@ -26,11 +26,11 @@ public class AIAlgorithmTest {
 	public void searchResponse(Message message) {
 		Message output = aiEngineFacade.execute(message);
 		System.out.println("======= MENSAJE ENTRANTE: " + message.getText());
-		System.out.println("======= RESPUESTA FINAL: " + output.getText());
-		System.out.println("======= " + output.getMetadata("orden_desconocida"));
+		System.out.println("======= RESPUESTA FINAL:  " + output.getText());
+		System.out.println("======= ORDEN :           " + output.getOrder());
 	}
 	
-	@Test
+	//@Test
 	public void orderTest() {
 		searchResponse(new Message("Abrir programa"));
 		searchResponse(new Message("comenzar dictado"));
@@ -41,7 +41,6 @@ public class AIAlgorithmTest {
 	@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
-		searchResponse(new Message("hola Atenea saludame"));
 		searchResponse(new Message("Buenos días Atenea"));
 		searchResponse(new Message("Buenos dias Atenea"));
 		searchResponse(new Message("Atenea buenas noches"));
@@ -57,16 +56,16 @@ public class AIAlgorithmTest {
 		searchResponse(new Message("Cómo te llamás"));
 		searchResponse(new Message("Quién sos"));
 		searchResponse(new Message("Cuántos años tenés"));
+		searchResponse(new Message("soy Leandro"));
 		assertTrue(true);
 	}
 	
-	@Test
+	//@Test
 	public void questionTest() {
 		searchResponse(new Message("Quién participó de las independencias de Argentina, Chile y Perú"));
 		searchResponse(new Message("Cuándo murió San Martín"));
 		searchResponse(new Message("Dónde nació San Martín"));
-		//searchResponse(new Message("salir volando"));
-		//searchResponse(new Message("Hola"));
+		searchResponse(new Message("Quién es Obama"));
 		assertTrue(true);
 	}
 

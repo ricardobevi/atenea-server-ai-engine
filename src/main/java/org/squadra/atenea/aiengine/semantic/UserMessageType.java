@@ -19,6 +19,8 @@ public class UserMessageType {
 		public static final String PREGUNTA_NOMBRE = "PREGUNTA_NOMBRE";
 		public static final String PREGUNTA_EDAD = "PREGUNTA_EDAD";
 		public static final String PREGUNTA_QUE_HACES = "PREGUNTA_QUE_HACES";
+		
+		public static final String RESPUESTA_NOMBRE_USUARIO = "RESPUESTA_NOMBRE_USUARIO";
 	}
 	
 	public static class Order {
