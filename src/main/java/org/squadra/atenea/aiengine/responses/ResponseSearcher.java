@@ -30,7 +30,7 @@ public class ResponseSearcher {
 			
 			case QUESTION:
 				responseText = QuestionResponseSearcher.getResponse(message, inputMessageType, sentence);
-				responseType = Message.QUESTION;
+				responseType = message.getType();
 				break;
 			
 			case ORDER:
