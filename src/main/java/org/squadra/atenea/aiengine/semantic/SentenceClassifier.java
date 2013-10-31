@@ -214,9 +214,10 @@ public class SentenceClassifier {
 			if (word.getName().matches("Atenea|atenea")) {
 				it.remove();
 			}
+			/*
 			else if (word.getType() == WordTypes.Type.PROPER_NAME) {
 				word.setName("%nombre%");
-			}
+			}*/
 		}
 		
 		String inputSentenceStr = inputSentence.toString();
