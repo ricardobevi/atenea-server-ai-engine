@@ -35,6 +35,8 @@ public class QuestionResponseSearcher {
 		
 		// Armo la respuesta segun el tipo de pregunta ingresada
 		
+		message.setType(Message.QUESTION);
+		
 		switch (inputMessageType) {
 		
 			case UserMessageType.Question.QUIEN:
@@ -97,7 +99,8 @@ public class QuestionResponseSearcher {
 	
 	
 	/**
-	 * 
+	 * Obtiene una respuesta aleatoria de que no conoce la respuesta y setea los
+	 * parametros necesarios para ejecutar una busqueda en Google.
 	 * @param message
 	 * @param sentence
 	 * @return
@@ -108,9 +111,17 @@ public class QuestionResponseSearcher {
 		message.setOrder("buscar en google " + sentence.toSimpleSentence(true));
 		message.setType(Message.PRELOAD_ACTION);
 		
-		String googleAnswer = 
-				AssertionAndDefaultSearcher.getResponseByType(ResponseType.Default.FALTA_INFORMACION)
-				.replace(".", ",") + " " +
+		Integer randomInt1 = (int) Math.round(Math.random() * 100);
+		
+		String googleAnswer = "";
+		
+		if (randomInt1 < 70) {
+			googleAnswer += 
+					AssertionAndDefaultSearcher.getResponseByType(ResponseType.Default.FALTA_INFORMACION)
+					.replace(".", ",") + " ";
+		}
+		
+		googleAnswer += 
 				AssertionAndDefaultSearcher.getResponseByType(ResponseType.Default.BUSQUEDA_EN_GOOGLE);
 		
 		return googleAnswer;
