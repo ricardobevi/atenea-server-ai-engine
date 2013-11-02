@@ -43,7 +43,6 @@ public class AIEngineFacade {
 		if ( this.isDBStarted == false ){
 			//inicia la bd si no esta iniciada.
 			NeuralDataAccess.init();
-			NeuralDataAccess.loadCache();
 			this.isDBStarted = true;
 		}
 		
