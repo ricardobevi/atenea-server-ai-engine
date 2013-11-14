@@ -19,6 +19,7 @@ public class LearnActionAlgorithm implements AbstractAlgorithm {
 			clicks.add( Click.deserialize(icon));
 		}
 		System.out.println("Termino de deserializar");
+		ListOfAction.getInstance().removeAction(input.getText());
 		ListOfAction.getInstance().addAction(input.getText() , clicks);
 		ListOfAction.getInstance().writeToFile();
 		System.out.println("Termino de hacer todo :'D");
