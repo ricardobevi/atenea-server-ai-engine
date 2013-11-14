@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j;
 import org.squadra.atenea.aiengine.algorithm.AIAlgorithm;
 import org.squadra.atenea.aiengine.algorithm.AbstractAlgorithm;
 import org.squadra.atenea.aiengine.algorithm.LearnActionAlgorithm;
+import org.squadra.atenea.aiengine.algorithm.RemoveActionAlgorithm;
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 
@@ -29,6 +30,9 @@ public class AIEngineFacade {
 		this.initDatabase();
 		if( input.getType() == Message.STORE_ACTION ){
 			algorithm = new LearnActionAlgorithm();
+		}
+		else if( input.getType() == Message.REMOVE_ACTION ){
+			algorithm = new RemoveActionAlgorithm();
 		}
 		else{
 			algorithm = new AIAlgorithm();			
