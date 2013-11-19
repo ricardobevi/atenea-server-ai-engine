@@ -30,7 +30,8 @@ public class SentenceClassifier {
 		Type sentenceType = Type.UNKNOWN;
 		String resultMessageType;
 		
-		if ( !(resultMessageType = DialogHelper.isDialog(sentence)).equals( UserMessageType.UNKNOWN ) ) {
+		resultMessageType = DialogHelper.isDialog(sentence);
+		if ( !resultMessageType.equals( UserMessageType.UNKNOWN ) ) {
 			//ES UN DIALOGO
 			log.debug("Clasificacion: DIALOGO");
 			sentenceType = Type.DIALOG;
@@ -83,15 +84,19 @@ public class SentenceClassifier {
 		   	}
 			
 		}
-		else if ( !(resultMessageType = QuestionHelper.isQuestion(sentence)).equals( UserMessageType.UNKNOWN ) ) {
-			//ES UNA PREGUNTA
-			log.debug("Clasificacion: PREGUNTA");
-			sentenceType = Type.QUESTION;
-		} 
-		else {
-			//POR DEFECTO ES UNA AFIRMACION
-			log.debug("Clasificacion: AFIRMACION / DESCONOCIDA");
-			sentenceType = Type.ASSERTION;
+		else
+		{ 
+			resultMessageType = QuestionHelper.isQuestion(sentence);
+			if ( !resultMessageType.equals( UserMessageType.UNKNOWN ) ) {
+				//ES UNA PREGUNTA
+				log.debug("Clasificacion: PREGUNTA");
+				sentenceType = Type.QUESTION;
+			}
+			else {
+				//POR DEFECTO ES UNA AFIRMACION
+				log.debug("Clasificacion: AFIRMACION / DESCONOCIDA");
+				sentenceType = Type.ASSERTION;
+			}
 		}
 		
 		log.debug("Tipo de mensaje: " + resultMessageType);
