@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import lombok.extern.log4j.Log4j;
 
 import org.squadra.atenea.ateneacommunication.Message;
-import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.data.query.BasicQuery;
-import org.squadra.atenea.wordclassifier.WordClassifier;
 
 @Log4j
 public class VerySimpleResponseAlgorithm  implements AbstractAlgorithm{

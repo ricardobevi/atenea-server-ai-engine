@@ -1,7 +1,6 @@
 package org.squadra.atenea.aiengine.semantic.helper;
 
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
-import org.squadra.atenea.aiengine.semantic.UserMessageType.Question;
 import org.squadra.atenea.parser.model.Sentence;
 
 public class QuestionHelper {

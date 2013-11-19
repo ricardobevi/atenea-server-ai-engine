@@ -5,7 +5,6 @@ import java.util.Iterator;
 
 import org.squadra.atenea.aiengine.responses.ResponseType;
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
-import org.squadra.atenea.aiengine.semantic.UserMessageType.Dialog;
 import org.squadra.atenea.base.StringUtil;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.data.server.Neo4jServer;
