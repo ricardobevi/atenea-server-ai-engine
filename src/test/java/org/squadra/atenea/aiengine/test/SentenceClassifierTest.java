@@ -1,15 +1,12 @@
 package org.squadra.atenea.aiengine.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.squadra.atenea.aiengine.semantic.UserMessageType;
-import org.squadra.atenea.base.word.Word;
-import org.squadra.atenea.data.query.DialogQuery;
 import org.squadra.atenea.data.server.Neo4jServer;
 import org.squadra.atenea.data.server.NeuralDataAccess;
 import org.squadra.atenea.parser.model.SimpleSentence;

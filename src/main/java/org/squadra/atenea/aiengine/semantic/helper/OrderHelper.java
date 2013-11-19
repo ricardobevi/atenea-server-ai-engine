@@ -11,6 +11,8 @@ import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.parser.model.Sentence;
 import org.squadra.atenea.wordclassifier.WordClassifier;
 
+import com.google.gson.Gson;
+
 @Log4j
 public class OrderHelper {
 
@@ -61,6 +63,9 @@ public class OrderHelper {
 		ArrayList<Sentence> allVerbs = sentence.getVerbs();
 		ArrayList<Word> mainVerbs = sentence.getMainVerbs();
 
+		Gson gson = new Gson();
+		System.out.println( "Expresiones de deseo:" + gson.toJson(desireExpressions));
+		System.out.println( "Palabras irrelevantes:" + gson.toJson( irrelevantWords ));
 		Boolean isOrder = false;
 
 		// chequeo si es una accion conocida
@@ -76,10 +81,12 @@ public class OrderHelper {
 			isOrder = isDesireExpressionAction(allVerbs, mainVerbs);
 		}
 
+		/*
 		// Contiene verbos en imperativo
 		if (!isOrder) {
 			isOrder = isImperativeVerbAction(allWords);
 		}
+		*/
 		
 		return isOrder;
 	}
@@ -110,9 +117,9 @@ public class OrderHelper {
 	 */
 	private static Boolean isImperativeVerbAction(ArrayList<Word> allWords) {
 
+		Boolean isOrder = false;
 		Boolean isImperativeChecked = false;
 		WordClassifier classifier = new WordClassifier();
-		Boolean isOrder = false;
 		Integer i = 0;
 
 		while (!isImperativeChecked && i < allWords.size()) {
@@ -120,7 +127,7 @@ public class OrderHelper {
 			if (isRelevantWord(allWords.get(i).getName())) {
 
 				log.debug("Orden: verificando si es verbo y es imperativo " + allWords.get(i).getName()
-						+ " es imperativo");
+						+ " es imperativo ( base: " + allWords.get(i).getBaseWord() + ")");
 
 				if (  !classifier.isImperative( allWords.get(i).getName(), allWords.get(i).getBaseWord() )) {
 					log.debug("Orden: COMIENZA CON VERBO IMPERATIVO");
