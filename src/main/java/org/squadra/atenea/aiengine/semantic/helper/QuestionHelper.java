@@ -29,12 +29,24 @@ public class QuestionHelper {
 
 		if (questionWord.toLowerCase().matches("dónde")) {
 			messageType = UserMessageType.Question.DONDE;
-		} else if (questionWord.toLowerCase().matches("cuándo")) {
+		} 
+		else if (questionWord.toLowerCase().matches("cuándo")) {
 			messageType = UserMessageType.Question.CUANDO;
-		} else if (questionWord.toLowerCase().matches("quién")) {
+		} 
+		else if (questionWord.toLowerCase().matches("quién|quiénes")) {
 			messageType = UserMessageType.Question.QUIEN;
-		} else if (questionWord.toLowerCase().matches("qué")) {
+		} 
+		else if (questionWord.toLowerCase().matches("qué")) {
 			messageType = UserMessageType.Question.QUE;
+		} 
+		else if (questionWord.toLowerCase().matches("cuál|cuáles")) {
+			messageType = UserMessageType.Question.CUAL;
+		} 
+		else if (questionWord.toLowerCase().matches("cuánto|cuántos")) {
+			messageType = UserMessageType.Question.CUANTO;
+		} 
+		else {
+			messageType = UserMessageType.Question.OTRO;
 		}
 
 		return messageType;

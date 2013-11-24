@@ -27,7 +27,7 @@ public class AIAlgorithmTest {
 		Message output = aiEngineFacade.execute(message);
 		System.out.println("======= MENSAJE ENTRANTE: " + message.getText());
 		System.out.println("======= RESPUESTA FINAL:  " + output.getText());
-		System.out.println("======= ORDEN :           " + output.getOrder());
+		System.out.println("======= ORDEN:            " + output.getOrder());
 	}
 	
 	//@Test
@@ -71,11 +71,19 @@ public class AIAlgorithmTest {
 	
 	@Test
 	public void questionFromAdditionalInfoTest() {
+		searchResponse(new Message("Quién murió ayer"));
+		searchResponse(new Message("Quién es el choto de San Martín"));
+		searchResponse(new Message("Quién es la esposa de José de San Martín"));
+		searchResponse(new Message("Quiénes son los hijos de San Martín"));
 		searchResponse(new Message("Cuándo murió San Martín"));
-		searchResponse(new Message("Dónde murió San Martín"));
-		searchResponse(new Message("Cuándo nació San Martín"));
-		searchResponse(new Message("Dónde nació San Martín"));
-		
+		searchResponse(new Message("Cuándo fue la muerte de José de San Martín"));
+		searchResponse(new Message("Cuándo nace Obama"));
+		searchResponse(new Message("Cuándo ha sido el nacimiento de Obama"));
+		searchResponse(new Message("Dónde había muerto San Martín"));
+		searchResponse(new Message("Dónde estudió Barack Obama"));
+		searchResponse(new Message("Dónde murió Nestor Kirchner"));
+		searchResponse(new Message("Dónde debutó Maradona"));
+		searchResponse(new Message("Dónde sucumbió José de San Martín"));
 		assertTrue(true);
 	}
 
