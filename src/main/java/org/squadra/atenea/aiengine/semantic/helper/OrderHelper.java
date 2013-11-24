@@ -10,6 +10,7 @@ import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.base.actions.Click;
 import org.squadra.atenea.base.actions.ListOfAction;
+import org.squadra.atenea.base.actions.PreloadAction;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.parser.model.Sentence;
@@ -24,7 +25,8 @@ public class OrderHelper {
 	private static HashSet<String> irrelevantWords = new HashSet<String>();
 	// por ahora el hashset se carga en el metodo isDesireExpression
 	private static HashSet<String> desireExpressions = new HashSet<String>();
-	
+	private static String initialPrepositionRegularExpression = "^a |^ante |^bajo |^cabe |^con |^contra |^de |^desde |^en |^entre |^hacia |^hasta |^para |^por |^según |^sin |^so |^sobre |^tras";
+			
 	static {
 		
 		if (irrelevantWords.isEmpty()) {
@@ -53,7 +55,7 @@ public class OrderHelper {
 		// muestro las expresiones de deseo y palabras irrelevantes cargadas
 		Gson gson = new Gson();
 		System.out.println( "Expresiones de deseo:" + gson.toJson(desireExpressions));
-		System.out.println( "Palabras irrelevantes:" + gson.toJson( irrelevantWords ));
+		System.out.println( "Palabras irrelevantes:" + gson.toJson(irrelevantWords ));
 
 		//Declaro variables necesarias con sus valores por defecto
 		Boolean classifierFlag = false;
@@ -75,7 +77,7 @@ public class OrderHelper {
 			classifierFlag = true;
 		}
 		
-		//si es accion precargada
+		//si es accion precargada sin parametros
 		if(  !classifierFlag  ){
 		
 			orderName = getPreLoadedAction( filteredSentence , processedSentence  );
@@ -87,6 +89,21 @@ public class OrderHelper {
 				classifierFlag = true;
 			}
 		}
+		
+		
+		//si es accion precargada con parametros
+		if(  !classifierFlag  ){
+		
+			orderName = getPreLoadedActionWithParam( filteredSentence , processedSentence , sentence  );
+			
+			if(  !orderName.equals("") ){
+				log.debug("Clasificacion: ORDEN PRECARGADA CON PARAMETROS");
+				messageType = Message.PRELOAD_ACTION_WITH_PARAM;
+				userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+				classifierFlag = true;
+			}
+		}
+				
 		
 		//si es accion ya conocida
 		if(  !classifierFlag  ){
@@ -120,8 +137,6 @@ public class OrderHelper {
 				classifierFlag = true;
 			}
 		}
-		
-		
 		
 		//seteo resultados
 		if ( classifierFlag ) {
@@ -160,6 +175,59 @@ public class OrderHelper {
 		
 		return  orderName ;
 	}
+	
+
+	private static String getPreLoadedActionWithParam(String filteredSentence, String processedSentence, Sentence sentence) {
+		
+		String orderName = "";
+		PreloadAction processedOrder = ListOfAction.getInstance().getPreLoadActionWithParam(processedSentence);
+		
+		if(processedOrder != null){
+			
+			//Tomo la ultima palabra base de la accion
+			String[] wordInActionName = processedOrder.getName().split(" ");
+			String lastWordInActionName = wordInActionName[wordInActionName.length -1];
+			
+			//busco dicha palabra en la oracion
+			// luego cargo en una variable toda la oracion que se encuentra despues de esa palabra
+			ArrayList<Word> allWords = sentence.getAllWords(false);
+			
+			Boolean positionFlag = false;
+			String param ="";
+			
+			for(int i = 0 ; i < allWords.size() ; i++ ) {
+				
+				if ( !positionFlag && allWords.get(i).getBaseWord().equals(lastWordInActionName) ) {
+					positionFlag = true;
+				}
+				else if (positionFlag){
+					param += allWords.get(i).getName() + " ";
+				}
+				
+			}
+			
+			//filtro las palabras irrelevantes
+			String filteredParam = filterIrrelevantWords(param);
+			filteredParam = filteredParam.replaceAll(initialPrepositionRegularExpression, "").trim();
+
+			//seteo el valor param en el objeto de processedOrder
+			orderName = processedOrder.getName() + " " + filteredParam;
+		}
+		
+		log.debug("orden con parametro encontrada: " + orderName );
+		return  orderName ;
+		
+		/*
+		 * si quiero tener en cuenta orden filtrada
+		 * 
+		 * PreloadAction filteredOrder = ListOfAction.getInstance().getPreLoadActionWithParam(filteredSentence);
+		 * 
+		 * if (filteredOrder != null) {
+			orderName = filteredSentence;	
+			}
+		 * 
+		 */
+	}	
 
 	private static String getLearnedAction(String filteredSentence, String processedSentence) {
 	
@@ -362,7 +430,7 @@ public class OrderHelper {
 			}
 		}
 
-		return filteredWords;
+		return filteredWords.trim();
 	}
 	
 	/**
@@ -377,7 +445,7 @@ public class OrderHelper {
 
 		for (Word word : sentence) {
 			if (isRelevantWord(word.getBaseWord())) {
-				filteredWords += word + " ";
+				filteredWords += word.getName() + " ";
 			}
 		}
 
@@ -391,7 +459,8 @@ public class OrderHelper {
 	 * @return true/false
 	 */
 	private static boolean isRelevantWord(String word) {
-		return !irrelevantWords.contains(word.toLowerCase());
+		
+		return !(irrelevantWords.contains(word.toLowerCase()) || desireExpressions.contains(word.toLowerCase()) );
 	}
 
 	/**
