@@ -2,9 +2,13 @@ package org.squadra.atenea.aiengine.semantic.helper;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import lombok.extern.log4j.Log4j;
 
+import org.squadra.atenea.aiengine.semantic.UserMessageType;
+import org.squadra.atenea.ateneacommunication.Message;
+import org.squadra.atenea.base.actions.Click;
 import org.squadra.atenea.base.actions.ListOfAction;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
@@ -23,9 +27,9 @@ public class OrderHelper {
 	
 	static {
 		
-		// TODO: esto se tiene que cargar en el constructor y no acá
 		if (irrelevantWords.isEmpty()) {
 			irrelevantWords.add("atenea");
+			irrelevantWords.add("ateneo");
 			irrelevantWords.add("por");
 			irrelevantWords.add("favor");
 			irrelevantWords.add("por favor");
@@ -34,8 +38,6 @@ public class OrderHelper {
 			irrelevantWords.add("disculpame");
 		}
 		
-		
-		// TODO: esto se tiene que cargar en el constructor y no acá
 		if (desireExpressions.isEmpty()) {
 			desireExpressions.add("gustar");
 			desireExpressions.add("querer");
@@ -45,7 +47,138 @@ public class OrderHelper {
 		}
 		
 	}
+
+	public static String getTypeOfOrder(Sentence sentence, Message message) {
+
+		// muestro las expresiones de deseo y palabras irrelevantes cargadas
+		Gson gson = new Gson();
+		System.out.println( "Expresiones de deseo:" + gson.toJson(desireExpressions));
+		System.out.println( "Palabras irrelevantes:" + gson.toJson( irrelevantWords ));
+
+		//Declaro variables necesarias con sus valores por defecto
+		Boolean classifierFlag = false;
+		int messageType = Message.UNKNOWN;
+		String userMessageType =  UserMessageType.UNKNOWN;
+		String orderName = "";
+		
+		String processedSentence = OrderHelper.getParsedOrder(sentence);
+		String filteredSentence  = OrderHelper.filterIrrelevantWords(sentence.getAllWords(false));
+		
+		//COMIENZO DE LOGICA DE NEGOCIO
+
+		//si es comando
+		orderName = getCommand(filteredSentence , processedSentence ); 
+		if( !orderName.equals( "" ) ){
+			log.debug("Clasificacion: ORDEN COMANDO");
+			messageType = Message.PRELOAD_ACTION;
+			userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+			classifierFlag = true;
+		}
+		
+		//si es accion precargada
+		if(  !classifierFlag  ){
+		
+			orderName = getPreLoadedAction( filteredSentence , processedSentence  );
+			
+			if(  !orderName.equals("") ){
+				log.debug("Clasificacion: ORDEN PRECARGADA");
+				messageType = Message.PRELOAD_ACTION;
+				userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+				classifierFlag = true;
+			}
+		}
+		
+		//si es accion ya conocida
+		//List<Click> 
+		if(  !classifierFlag  ){
+		
+			orderName = getLearnedAction( filteredSentence , processedSentence  ) ;
+			
+			if( !orderName.equals( "" ) ){
+				log.debug("Clasificacion: ORDEN ENSEÑADA");
+				messageType = Message.ORDER;
+				userMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
+				classifierFlag = true;
+				
+				 List<Click> lista = getListOfClick(orderName);
+				
+				for (Click click : lista) 
+				{
+					message.setIcon(click.serialize());
+				}
+			}
+		}
+		
+		//si es una posible accion desconocida
+		if(  !classifierFlag  ){
+			
+			orderName = isPossibleOrder( sentence , processedSentence );
+
+			if( !orderName.equals( "" ) ){
+				log.debug("Clasificacion: ORDEN DESCONOCIDA");
+				messageType = Message.LEARN_ACTION;
+				userMessageType = UserMessageType.Order.ORDEN_DESCONOCIDA;
+				classifierFlag = true;
+			}
+		}
+		
+		
+		
+		//seteo resultados
+		if ( classifierFlag ) {
+			message.setOrder( orderName );
+			message.setType( messageType );
+		}
+		
+		return userMessageType;
+	}
+
 	
+	private static String getCommand(String filteredSentence, String processedSentence) {
+		
+		String orderName = "";
+		
+		if (ListOfAction.getInstance().getCommand(filteredSentence) != null) {
+			orderName = filteredSentence;
+		}
+		else if(ListOfAction.getInstance().getCommand(processedSentence) != null){
+			orderName = processedSentence;
+		}
+		
+		return  orderName ;
+	}
+
+	private static String getPreLoadedAction(String filteredSentence, String processedSentence) {
+		
+		String orderName = "";
+		
+		if (ListOfAction.getInstance().getPreLoadAction(filteredSentence) != null) {
+			orderName = filteredSentence;
+		}
+		else if(ListOfAction.getInstance().getPreLoadAction(processedSentence) != null){
+			orderName = processedSentence;
+		}
+		
+		return  orderName ;
+	}
+
+	private static String getLearnedAction(String filteredSentence, String processedSentence) {
+	
+		String orderName = "";
+		
+		if (ListOfAction.getInstance().getAction(filteredSentence) != null) {
+			orderName = filteredSentence;
+		}
+		else if(ListOfAction.getInstance().getAction(processedSentence) != null){
+			orderName = processedSentence;
+		}
+		
+		return  orderName;		
+	}
+	
+	private static List<Click> getListOfClick(String orderName) {
+		return ListOfAction.getInstance().getAction(orderName) ;
+	}
 
 
 	/**
@@ -53,60 +186,37 @@ public class OrderHelper {
 	 * orden que comience con un verbo infinitivo, que se construya con una
 	 * expresion de deseo o un verbo imperativo. Previo al analisis elimina
 	 * palabras irrelevantes
+	 * @param processedSentence 
+	 * @param sentence 
 	 * 
 	 * @param sentence
 	 * @return true/false
 	 */
-	public static boolean isOrder(Sentence sentence) {
-
+	private static String isPossibleOrder(Sentence sentence, String processedSentence) {
+		
 		ArrayList<Word> allWords = sentence.getAllWords(false);
 		ArrayList<Sentence> allVerbs = sentence.getVerbs();
 		ArrayList<Word> mainVerbs = sentence.getMainVerbs();
-
-		Gson gson = new Gson();
-		System.out.println( "Expresiones de deseo:" + gson.toJson(desireExpressions));
-		System.out.println( "Palabras irrelevantes:" + gson.toJson( irrelevantWords ));
 		Boolean isOrder = false;
 
-		// chequeo si es una accion conocida
-		isOrder = isKnownAction(allWords);
-		
 		// chequeo si comienza con infinitivo excluyendo palabras irrelevantes
-		if (!isOrder) {
-			isOrder = isInfinitiveAction(allWords);
-		}
+		isOrder = isInfinitiveAction(allWords);
 
 		// chequeo si contiene expresion de deseo en sus verbos
 		if (!isOrder && !allVerbs.isEmpty()) {
 			isOrder = isDesireExpressionAction(allVerbs, mainVerbs);
 		}
 
+		// chequeo si comienza con imperativo excluyendo palabras irrelevantes
 		/*
-		// Contiene verbos en imperativo
 		if (!isOrder) {
 			isOrder = isImperativeVerbAction(allWords);
 		}
 		*/
-		
-		return isOrder;
-	}
 
-	private static Boolean isKnownAction(ArrayList<Word> allWords) {
-		
-		Boolean isOrder = false;
-		String orderName =  filterIrrelevantWords( allWords );
-		
-		log.debug("Orden: verificando si es accion precargada " + orderName );
-		
-		if ( ListOfAction.getInstance().getAction(orderName) != null ||
-			 ListOfAction.getInstance().getPreLoadAction(orderName) != null || 
-			 ListOfAction.getInstance().getCommand(orderName) != null) {
-			
-			isOrder = true;
-		}
-		
-		return isOrder;
+		return isOrder? processedSentence : "";
 	}
+	
 
 	/**
 	 * Este metodo indica si la oracion es una accion expresada mediante verbos
@@ -115,6 +225,7 @@ public class OrderHelper {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static Boolean isImperativeVerbAction(ArrayList<Word> allWords) {
 
 		Boolean isOrder = false;
@@ -186,8 +297,8 @@ public class OrderHelper {
 	private static Boolean isInfinitiveAction(ArrayList<Word> allWords) {
 
 		Boolean isInfinitiveChecked = false;
-		Integer i = 0;
 		Boolean isOrder = false;
+		Integer i = 0;
 
 		while (!isInfinitiveChecked && i < allWords.size()) {
 
@@ -296,4 +407,5 @@ public class OrderHelper {
 		System.out.println("viendo si es expresion de deseo");
 		return desireExpressions.contains(verb.toLowerCase());
 	}
+
 }
