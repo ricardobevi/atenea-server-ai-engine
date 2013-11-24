@@ -15,58 +15,107 @@ public class QuestionResponseSearcher {
 	public static String getResponse(Message message, String inputMessageType,
 			Sentence sentence) {
 
-		ArrayList<Word> nounsWords = sentence.getNouns();
+		// Obtengo sustantivos, verbos y nombres propios
+		
+		ArrayList<Word> nounsWords = sentence.getNonProperNouns();
 		ArrayList<String> nounsStrings = new ArrayList<>();
 		
 		ArrayList<Word> verbsWords = sentence.getMainVerbs();
 		ArrayList<String> verbsStrings = new ArrayList<>();
 		
+		ArrayList<Word> properNounsWords = sentence.getProperNouns();
+		ArrayList<String> properNounsString = new ArrayList<>();
+		
+		// Convierto los sustantivos, verbos y nombres en strings con su palabra base
+		
 		for (Word noun : nounsWords) {
-			System.out.println("Sustantivo: " + noun.getName());
-			nounsStrings.add(noun.getName());
+			System.out.println("Sustantivo: " + noun.getBaseWord());
+			nounsStrings.add(noun.getBaseWord());
 		}
-		
 		for (Word verb : verbsWords) {
-			System.out.println("Verbo: " + verb.getName());
-			verbsStrings.add(verb.getName());
+			System.out.println("Verbo: " + verb.getBaseWord());
+			verbsStrings.add(verb.getBaseWord());
+		}
+		for (Word name : properNounsWords) {
+			System.out.println("Nombres: " + name.getBaseWord());
+			properNounsString.add(name.getBaseWord());
 		}
 		
-		String answer = new String();
+		// Seteo los valores iniciales
+		
+		String answer = "";
+		message.setType(Message.QUESTION);
 		
 		// Armo la respuesta segun el tipo de pregunta ingresada
 		
-		message.setType(Message.QUESTION);
-		
 		switch (inputMessageType) {
-
 			
 			case UserMessageType.Question.QUIEN:
 				
-				try {
-					answer = getAnswerByKeyWords(nounsStrings);
-					Sentence parsedAnswer = new Parser().parse(answer);
-					
-					answer = parsedAnswer.getSubjects().get(0).getProperNouns().get(0).getName();
+				if (!properNounsString.isEmpty() && !nounsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), nounsStrings.get(0), "nombre");
 				}
-				catch (Exception e) {
-					answer = getGoogleAnswer(message, sentence);
+				if (answer.equals("")) {
+					// Algoritmo de Ricky
+				}
+				if (answer.equals("")) {
+					answer = "google"; // getGoogleAnswer(message, sentence);
 				}
 				break;
 			
 			case UserMessageType.Question.CUANDO:
 				
+				if (!properNounsString.isEmpty() && !nounsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), nounsStrings.get(0), "fecha");
+				}
+				else if (!properNounsString.isEmpty() && !verbsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), verbsStrings.get(0), "fecha");
+				}
+				if (answer.equals("")) {
+					// Algoritmo de Ricky
+				}
+				if (answer.equals("")) {
+					answer = "google"; // getGoogleAnswer(message, sentence);
+				}
+				break;
 				
 			case UserMessageType.Question.DONDE:
 				
-				try {
-					nounsStrings.addAll(verbsStrings);
-					answer = getAnswerByKeyWords(nounsStrings);
-					Sentence parsedAnswer = new Parser().parse(answer);
-					
-					answer = parsedAnswer.toSimpleSentence(true).toString();
+				if (!properNounsString.isEmpty() && !nounsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), nounsStrings.get(0), "lugar");
 				}
-				catch (Exception e) {
-					answer = getGoogleAnswer(message, sentence);
+				else if (!properNounsString.isEmpty() && !verbsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), verbsStrings.get(0), "lugar");
+				}
+				if (answer.equals("")) {
+					// Algoritmo de Ricky
+				}
+				if (answer.equals("")) {
+					answer = "google"; // getGoogleAnswer(message, sentence);
+				}
+				break;
+				
+			case UserMessageType.Question.QUE:
+			case UserMessageType.Question.CUAL:
+				
+				if (!properNounsString.isEmpty() && !nounsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), nounsStrings.get(0), "sustantivo");
+				}
+				else if (!properNounsString.isEmpty() && !verbsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), verbsStrings.get(0), "sustantivo");
+				}
+				if (answer.equals("")) {
+					// Algoritmo de Ricky
+				}
+				if (answer.equals("")) {
+					answer = "google"; // getGoogleAnswer(message, sentence);
 				}
 				break;
 				
@@ -108,11 +157,11 @@ public class QuestionResponseSearcher {
 	 * @param subtitle Subtitulo del cuadrito de la Wikipedia
 	 * @return Respuesta
 	 */
-	private static String getAnswerFromAdditionalInfo(String title, String subtitle) {
+	private static String getAnswerFromAdditionalInfo(String title, String subtitle, String contentType) {
 		
 		QuestionQuery qq = new QuestionQuery();
 		
-		return qq.findSentencesFromAdditionalInfo(title, subtitle, null);
+		return qq.findSentencesFromAdditionalInfo(title, subtitle, contentType);
 	}
 	
 	
