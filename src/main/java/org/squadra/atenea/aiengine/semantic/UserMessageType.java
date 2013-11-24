@@ -32,9 +32,12 @@ public class UserMessageType {
 	public static class Question {
 		
 		public static final String QUIEN = "QUIEN";
+		public static final String CUAL = "CUAL";
 		public static final String CUANDO = "CUANDO";
+		public static final String CUANTO = "CUANTO";
 		public static final String DONDE = "DONDE";
 		public static final String QUE = "QUE";
+		public static final String OTRO = "OTRO";
 	}
 	
 	public static final String UNKNOWN = "UNKNOWN";
