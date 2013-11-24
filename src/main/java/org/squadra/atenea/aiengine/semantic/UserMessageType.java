@@ -12,7 +12,6 @@ public class UserMessageType {
 	public static class Dialog {
 		
 		public static final String SALUDO = "SALUDO";
-		public static final String SALUDO_PREGUNTA_ESTADO_ANIMO = "SALUDO_PREGUNTA_ESTADO_ANIMO";
 		public static final String DESPEDIDA = "DESPEDIDA";
 		
 		public static final String PREGUNTA_ESTADO_ANIMO = "PREGUNTA_ESTADO_ANIMO";

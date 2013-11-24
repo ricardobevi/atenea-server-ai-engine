@@ -59,9 +59,6 @@ public class QuestionResponseSearcher {
 				if (answer.equals("")) {
 					// Algoritmo de Ricky
 				}
-				if (answer.equals("")) {
-					answer = "google"; // getGoogleAnswer(message, sentence);
-				}
 				break;
 			
 			case UserMessageType.Question.CUANDO:
@@ -77,9 +74,6 @@ public class QuestionResponseSearcher {
 				if (answer.equals("")) {
 					// Algoritmo de Ricky
 				}
-				if (answer.equals("")) {
-					answer = "google"; // getGoogleAnswer(message, sentence);
-				}
 				break;
 				
 			case UserMessageType.Question.DONDE:
@@ -94,9 +88,6 @@ public class QuestionResponseSearcher {
 				}
 				if (answer.equals("")) {
 					// Algoritmo de Ricky
-				}
-				if (answer.equals("")) {
-					answer = "google"; // getGoogleAnswer(message, sentence);
 				}
 				break;
 				
@@ -114,8 +105,20 @@ public class QuestionResponseSearcher {
 				if (answer.equals("")) {
 					// Algoritmo de Ricky
 				}
+				break;
+				
+			case UserMessageType.Question.CUANTO:
+				
+				if (!properNounsString.isEmpty() && !nounsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), nounsStrings.get(0), "cantidad");
+				}
+				else if (!properNounsString.isEmpty() && !verbsStrings.isEmpty()) {
+					answer = getAnswerFromAdditionalInfo(
+							properNounsString.get(0), verbsStrings.get(0), "cantidad");
+				}
 				if (answer.equals("")) {
-					answer = "google"; // getGoogleAnswer(message, sentence);
+					// Algoritmo de Ricky
 				}
 				break;
 				
@@ -124,6 +127,10 @@ public class QuestionResponseSearcher {
 				break;
 		}
 
+		if (answer.equals("")) {
+			answer = getGoogleAnswer(message, sentence);
+		}
+		
 		return answer;
 		
 	}
@@ -175,8 +182,8 @@ public class QuestionResponseSearcher {
 	private static String getGoogleAnswer(Message message, Sentence sentence) {
 		
 		//TODO: cambiar segun facu
-		message.setOrder("buscar en google " + sentence.toSimpleSentence(true));
-		message.setType(Message.PRELOAD_ACTION);
+		message.setOrder("buscar google " + sentence.toSimpleSentence(true));
+		message.setType(Message.PRELOAD_ACTION_WITH_PARAM);
 		
 		Integer randomInt1 = (int) Math.round(Math.random() * 100);
 		

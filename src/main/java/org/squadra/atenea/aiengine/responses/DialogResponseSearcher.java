@@ -13,8 +13,6 @@ public class DialogResponseSearcher {
 	 */
 	public static String getRandomResponse(Message message, String inputMessageType) {
 		
-		// TODO: tomar estos datos del cliente
-		
 		// Obtengo el nombre del usuario
 		String userName = message.getMetadata("userName");
 		if (userName == null) {
@@ -68,13 +66,6 @@ public class DialogResponseSearcher {
 			
 			// Si el usuario le pregunta a Atenea como esta
 			case UserMessageType.Dialog.PREGUNTA_ESTADO_ANIMO:
-			case UserMessageType.Dialog.SALUDO_PREGUNTA_ESTADO_ANIMO:
-				
-				// Si saluda, agrego un saludo al comienzo
-				if (inputMessageType.equals(UserMessageType.Dialog.SALUDO_PREGUNTA_ESTADO_ANIMO)
-						&& randomInt3 <= 50) {
-					finalResponse += getResponseByType(ResponseType.Dialog.SALUDO) + " ";
-				}
 				
 				if (randomInt1 <= 25) {
 					if (randomInt1 <= 10) {
