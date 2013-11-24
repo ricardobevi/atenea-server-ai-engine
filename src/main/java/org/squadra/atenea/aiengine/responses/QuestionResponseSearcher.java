@@ -11,7 +11,7 @@ import org.squadra.atenea.parser.model.Sentence;
 import org.squadra.atenea.parser.model.SimpleSentence;
 
 public class QuestionResponseSearcher {
-
+	
 	public static String getResponse(Message message, String inputMessageType,
 			Sentence sentence) {
 
@@ -31,18 +31,19 @@ public class QuestionResponseSearcher {
 			verbsStrings.add(verb.getName());
 		}
 		
-		String answer = "No tengo esa informacion.";
+		String answer = new String();
 		
 		// Armo la respuesta segun el tipo de pregunta ingresada
 		
 		message.setType(Message.QUESTION);
 		
 		switch (inputMessageType) {
-		
+
+			
 			case UserMessageType.Question.QUIEN:
 				
 				try {
-					answer = getAnswerByWords(nounsStrings);
+					answer = getAnswerByKeyWords(nounsStrings);
 					Sentence parsedAnswer = new Parser().parse(answer);
 					
 					answer = parsedAnswer.getSubjects().get(0).getProperNouns().get(0).getName();
@@ -53,11 +54,13 @@ public class QuestionResponseSearcher {
 				break;
 			
 			case UserMessageType.Question.CUANDO:
+				
+				
 			case UserMessageType.Question.DONDE:
 				
 				try {
 					nounsStrings.addAll(verbsStrings);
-					answer = getAnswerByWords(nounsStrings);
+					answer = getAnswerByKeyWords(nounsStrings);
 					Sentence parsedAnswer = new Parser().parse(answer);
 					
 					answer = parsedAnswer.toSimpleSentence(true).toString();
@@ -77,16 +80,17 @@ public class QuestionResponseSearcher {
 	}
 	
 	
+	
 	/**
-	 * Obtiene de la base de datos una respuesta aleatoria segun el tipo buscado.
-	 * @param type Tipo de respuesta que busca Atenea
+	 * Obtiene una respuesta de la base de datos que contenga las palabras ingresadas.
+	 * @param words Lista de palabras a buscar en la respuesta.
 	 * @return Respuesta
 	 */
-	public static String getAnswerByWords(ArrayList<String> words) {
+	private static String getAnswerByKeyWords(ArrayList<String> words) {
 		
 		QuestionQuery qq = new QuestionQuery();
 		
-		ArrayList<SimpleSentence> answers = qq.findAnswers(words);
+		ArrayList<SimpleSentence> answers = qq.findSentencesByKeyWords(words);
 		
 		for (SimpleSentence answer : answers) {
 			System.out.println(answer);
@@ -99,13 +103,27 @@ public class QuestionResponseSearcher {
 	
 	
 	/**
+	 * Obtiene una respuesta de la base de datos por titulo y subtitulo.
+	 * @param title Titulo del articulo de Wikipedia.
+	 * @param subtitle Subtitulo del cuadrito de la Wikipedia
+	 * @return Respuesta
+	 */
+	private static String getAnswerFromAdditionalInfo(String title, String subtitle) {
+		
+		QuestionQuery qq = new QuestionQuery();
+		
+		return qq.findSentencesFromAdditionalInfo(title, subtitle, null);
+	}
+	
+	
+	/**
 	 * Obtiene una respuesta aleatoria de que no conoce la respuesta y setea los
 	 * parametros necesarios para ejecutar una busqueda en Google.
 	 * @param message
 	 * @param sentence
-	 * @return
+	 * @return Respuesta
 	 */
-	public static String getGoogleAnswer(Message message, Sentence sentence) {
+	private static String getGoogleAnswer(Message message, Sentence sentence) {
 		
 		//TODO: cambiar segun facu
 		message.setOrder("buscar en google " + sentence.toSimpleSentence(true));
