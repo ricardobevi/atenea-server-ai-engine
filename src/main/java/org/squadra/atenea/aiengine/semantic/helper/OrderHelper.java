@@ -89,7 +89,6 @@ public class OrderHelper {
 		}
 		
 		//si es accion ya conocida
-		//List<Click> 
 		if(  !classifierFlag  ){
 		
 			orderName = getLearnedAction( filteredSentence , processedSentence  ) ;
