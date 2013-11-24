@@ -96,6 +96,10 @@ public class DialogHelper {
 		case ResponseType.Dialog.RESPUESTA_NOMBRE_ATENEA:
 			messageType = UserMessageType.Dialog.RESPUESTA_NOMBRE_USUARIO;
 			break;
+			
+		case ResponseType.Dialog.PREGUNTA_QUE_HACES:
+			messageType = UserMessageType.Dialog.PREGUNTA_QUE_HACES;
+			break;
 
 		default:
 			messageType = UserMessageType.UNKNOWN;
