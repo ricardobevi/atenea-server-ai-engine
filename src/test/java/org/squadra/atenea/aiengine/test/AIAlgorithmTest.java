@@ -81,9 +81,17 @@ public class AIAlgorithmTest {
 		searchResponse(new Message("Cuándo ha sido el nacimiento de Obama"));
 		searchResponse(new Message("Dónde había muerto San Martín"));
 		searchResponse(new Message("Dónde estudió Barack Obama"));
-		searchResponse(new Message("Dónde murió Nestor Kirchner"));
+		searchResponse(new Message("Dónde murió Néstor Kirchner"));
 		searchResponse(new Message("Dónde debutó Maradona"));
 		searchResponse(new Message("Dónde sucumbió José de San Martín"));
+		searchResponse(new Message("En qué cree Obama"));
+		searchResponse(new Message("Cuál es la religión de Barack Obama"));
+		searchResponse(new Message("De qué partido político fue Perón"));
+		searchResponse(new Message("Cuáles eran los apodos de Maradona"));
+		searchResponse(new Message("En qué posición jugaba Diego Armando Maradona"));
+		searchResponse(new Message("Dónde jugó Lionel Messi"));
+		searchResponse(new Message("Cuántos goles hizo Lionel Messi"));
+		searchResponse(new Message("Cuántas conversiones tiene Maradona"));
 		assertTrue(true);
 	}
 
