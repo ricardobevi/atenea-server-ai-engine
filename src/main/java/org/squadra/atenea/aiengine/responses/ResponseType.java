@@ -27,6 +27,7 @@ public class ResponseType {
 		public static final String RESPUESTA_A_ESTADO_ANIMO_USUARIO_BIEN = "$_RESPUESTA_A_ESTADO_ANIMO_USUARIO_BIEN";
 		public static final String RESPUESTA_A_ESTADO_ANIMO_USUARIO_MAL = "$_RESPUESTA_A_ESTADO_ANIMO_USUARIO_MAL";
 		public static final String RESPUESTA_EDAD_ATENEA = "$_RESPUESTA_EDAD_ATENEA";
+		public static final String PREGUNTA_QUE_HACES = "$_PREGUNTA_QUE_HACES";
 		public static final String RESPUESTA_A_QUE_HACES = "$_RESPUESTA_A_QUE_HACES";
 	}
 	
