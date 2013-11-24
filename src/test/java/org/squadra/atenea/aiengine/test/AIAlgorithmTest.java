@@ -30,7 +30,7 @@ public class AIAlgorithmTest {
 		System.out.println("======= ORDEN :           " + output.getOrder());
 	}
 	
-	@Test
+	//@Test
 	public void orderTest() {
 		searchResponse(new Message("Abrir programa"));
 		searchResponse(new Message("comenzar dictado"));
@@ -38,7 +38,7 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	@Test
+	//@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
 		searchResponse(new Message("Buenos días Atenea"));
@@ -60,12 +60,22 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	@Test
-	public void questionTest() {
+	//@Test
+	public void questionByKeyWordsTest() {
 		searchResponse(new Message("Quién participó de las independencias de Argentina, Chile y Perú"));
 		searchResponse(new Message("Cuándo murió San Martín"));
 		searchResponse(new Message("Dónde nació San Martín"));
 		searchResponse(new Message("Quién es Obama"));
+		assertTrue(true);
+	}
+	
+	@Test
+	public void questionFromAdditionalInfoTest() {
+		searchResponse(new Message("Cuándo murió San Martín"));
+		searchResponse(new Message("Dónde murió San Martín"));
+		searchResponse(new Message("Cuándo nació San Martín"));
+		searchResponse(new Message("Dónde nació San Martín"));
+		
 		assertTrue(true);
 	}
 
