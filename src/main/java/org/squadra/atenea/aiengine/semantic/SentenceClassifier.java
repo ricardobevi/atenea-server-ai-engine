@@ -1,15 +1,12 @@
 package org.squadra.atenea.aiengine.semantic;
 
-import java.util.List;
-
 import lombok.extern.log4j.Log4j;
 
+import org.squadra.atenea.aiengine.responses.ResponseType;
 import org.squadra.atenea.aiengine.semantic.helper.DialogHelper;
 import org.squadra.atenea.aiengine.semantic.helper.OrderHelper;
 import org.squadra.atenea.aiengine.semantic.helper.QuestionHelper;
 import org.squadra.atenea.ateneacommunication.Message;
-import org.squadra.atenea.base.actions.Click;
-import org.squadra.atenea.base.actions.ListOfAction;
 import org.squadra.atenea.parser.model.Sentence;
 import org.squadra.atenea.parser.model.Sentence.Type;
 
@@ -28,81 +25,55 @@ public class SentenceClassifier {
 	public static String classify(Message message, Sentence sentence) {
 
 		Type sentenceType = Type.UNKNOWN;
-		String resultMessageType;
+		String userMessageType;
+		Boolean classificationFlag = false; 
 		
-		resultMessageType = DialogHelper.isDialog(sentence);
-		if ( !resultMessageType.equals( UserMessageType.UNKNOWN ) ) {
+		userMessageType = DialogHelper.isDialog(sentence);
+		if ( !userMessageType.equals( UserMessageType.UNKNOWN ) ) {
 			//ES UN DIALOGO
 			log.debug("Clasificacion: DIALOGO");
 			sentenceType = Type.DIALOG;
-			
+			classificationFlag = true;
 		}
-		else if ( OrderHelper.isOrder(sentence) ) {
-			//ES UNA ORDEN
-			sentenceType = Type.ORDER;
-			
-			//TODO: las lineas siguientes deberían estar dentro de OrderHelper o en otra clase,
-			// ya que no solo clasifican la oracion, sino que actuan sobre mensaje. Al mismo tiempo parte de este codigo se repite
-			// en isOrder, se debería unificar
+		
+		
+		if ( !classificationFlag ) {
 
-			//Se determina si la accion es conocida o no
-			String orderName = OrderHelper.getParsedOrder(sentence); 
-					
-			System.out.println("OrderName: " + orderName);
-			message.setOrder(orderName);
-			
-			List<Click> lista = ListOfAction.getInstance().getAction(orderName);
-			//Accion conocida (ya enseñada)
-			if (lista != null)
-			{
-				message.setType(Message.ORDER);
-				resultMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
-				log.debug("Clasificacion: ORDEN CONOCIDA");
-				
-				for (Click click : lista) 
-				{
-					message.setIcon(click.serialize());
-				}
+			userMessageType = OrderHelper.getTypeOfOrder(sentence , message);
+			if(!userMessageType.equals( UserMessageType.UNKNOWN )){
+				//ES UNA ORDEN
+				log.debug("Clasificacion: ORDEN");
+				sentenceType = Type.ORDER;
+				classificationFlag = true;
 			}
-			//accion precargada o comando
-			else if ( ListOfAction.getInstance().getPreLoadAction(orderName) != null 
-					|| ListOfAction.getInstance().getCommand(orderName) != null )
-			{
-				System.out.println(ListOfAction.getInstance().getPreLoadAction(orderName));
-				System.out.println(ListOfAction.getInstance().getCommand(orderName));
 				
-				message.setType(Message.PRELOAD_ACTION);
-				resultMessageType = UserMessageType.Order.ORDEN_CONOCIDA;
-				log.debug("Clasificacion: ORDEN PRECARGADA o COMANDO");
-			}
-			//Accion desconocida
-			else 
-			{
-   				message.setType(Message.LEARN_ACTION);
-   				resultMessageType = UserMessageType.Order.ORDEN_DESCONOCIDA;
-   				log.debug("Clasificacion: ORDEN DESCONOCIDA");
-		   	}
-			
 		}
-		else
+		
+		if( !classificationFlag )
 		{ 
-			resultMessageType = QuestionHelper.isQuestion(sentence);
-			if ( !resultMessageType.equals( UserMessageType.UNKNOWN ) ) {
+			userMessageType = QuestionHelper.isQuestion(sentence);
+			if ( !userMessageType.equals( UserMessageType.UNKNOWN ) ) {
 				//ES UNA PREGUNTA
 				log.debug("Clasificacion: PREGUNTA");
 				sentenceType = Type.QUESTION;
-			}
-			else {
-				//POR DEFECTO ES UNA AFIRMACION
-				log.debug("Clasificacion: AFIRMACION / DESCONOCIDA");
-				sentenceType = Type.ASSERTION;
+				classificationFlag = true;
 			}
 		}
 		
-		log.debug("Tipo de mensaje: " + resultMessageType);
+		if( !classificationFlag )
+		{
+			//POR DEFECTO ES UNA AFIRMACION
+			userMessageType = ResponseType.Default.AFFIRMATION;
+			log.debug("Clasificacion: AFIRMACION / DESCONOCIDA");
+			sentenceType = Type.ASSERTION;
+			classificationFlag = true;
+		}
+		
+		
+		log.debug("Tipo de mensaje: " + userMessageType);
 		sentence.setType(sentenceType);
 	
-		return resultMessageType;
+		return userMessageType;
 	}
 
 }

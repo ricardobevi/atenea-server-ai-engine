@@ -12,7 +12,6 @@ public class UserMessageType {
 	public static class Dialog {
 		
 		public static final String SALUDO = "SALUDO";
-		public static final String SALUDO_PREGUNTA_ESTADO_ANIMO = "SALUDO_PREGUNTA_ESTADO_ANIMO";
 		public static final String DESPEDIDA = "DESPEDIDA";
 		
 		public static final String PREGUNTA_ESTADO_ANIMO = "PREGUNTA_ESTADO_ANIMO";
@@ -32,9 +31,12 @@ public class UserMessageType {
 	public static class Question {
 		
 		public static final String QUIEN = "QUIEN";
+		public static final String CUAL = "CUAL";
 		public static final String CUANDO = "CUANDO";
+		public static final String CUANTO = "CUANTO";
 		public static final String DONDE = "DONDE";
 		public static final String QUE = "QUE";
+		public static final String OTRO = "OTRO";
 	}
 	
 	public static final String UNKNOWN = "UNKNOWN";
