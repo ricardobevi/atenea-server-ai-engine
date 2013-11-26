@@ -48,24 +48,22 @@ public class DialogHelper {
 			 */
 		}
 
-		String inputSentenceStr = inputSentence.toString();
+		String inputSentenceStr = inputSentence.toString().toLowerCase();
 
 		String responseType = "";
 		Boolean flagContain = false;
 
-		// Verifico si la oracion de entrada es un tipo de dialogo conocido por
-		// Atenea
+		// Verifico si la oracion de entrada es un tipo de dialogo conocido por Atenea
 
 		int i = 0;
 		while (!flagContain && i < outputSentences.size()) {
 
-			String outputSentenceStr = outputSentences.get(i).toString();
+			String outputSentenceStr = outputSentences.get(i).toString().toLowerCase();
 
-			// TODO: metodo toGoogleEntry en SimpleSentence
-			if (StringUtil.replaceAccents(outputSentenceStr.toLowerCase())
-					.contains(
-							StringUtil.replaceAccents(inputSentenceStr
-									.toLowerCase()))) {
+			if (StringUtil.replaceAccents(
+						removeUnnecessaryChars(outputSentenceStr)).contains(
+								StringUtil.replaceAccents(
+										removeUnnecessaryChars(inputSentenceStr)))) {
 				flagContain = true;
 				responseType = outputSentences.get(i).getWords().get(0)
 						.getName();
@@ -98,6 +96,10 @@ public class DialogHelper {
 		case ResponseType.Dialog.RESPUESTA_NOMBRE_ATENEA:
 			messageType = UserMessageType.Dialog.RESPUESTA_NOMBRE_USUARIO;
 			break;
+			
+		case ResponseType.Dialog.PREGUNTA_QUE_HACES:
+			messageType = UserMessageType.Dialog.PREGUNTA_QUE_HACES;
+			break;
 
 		default:
 			messageType = UserMessageType.UNKNOWN;
@@ -105,6 +107,11 @@ public class DialogHelper {
 		}
 
 		return messageType;
+	}
+	
+	
+	private static String removeUnnecessaryChars(String sentence) {
+		return sentence.replaceAll("[\\.,;:\\-\\«\\»\\'’`¡¿?!\\\"]", "");
 	}
 	
 }

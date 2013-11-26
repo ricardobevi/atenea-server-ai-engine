@@ -44,13 +44,6 @@ public class DialogResponseSearcherTest {
 	}
 	
 	@Test
-	public void saludoYPreguntaEstadoAnimo() {
-		System.out.println("\n========= SALUDA Y PREGUNTA ESTADO ANIMO ===========\n");
-		searchResponses(UserMessageType.Dialog.SALUDO_PREGUNTA_ESTADO_ANIMO, 5);
-		assertTrue(true);
-	}
-	
-	@Test
 	public void preguntaNombre() {
 		System.out.println("\n================ PREGUNTA NOMBRE ===================\n");
 		searchResponses(UserMessageType.Dialog.PREGUNTA_NOMBRE, 5);
