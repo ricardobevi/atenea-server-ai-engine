@@ -1,0 +1,59 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.squadra.atenea</groupId>
+	<artifactId>AIEngine</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>AIEngine</name>
+	<description>The AI Core.</description>
+
+<parent>
+  <groupId>AteneaPom</groupId>
+  <artifactId>AteneaPom</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+</parent>
+
+	<dependencies>
+
+		<dependency>
+			  <groupId>org.squadra.atenea</groupId>
+			  <artifactId>AteneaCommunication</artifactId>
+			  <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			  <groupId>org.squadra.atenea</groupId>
+			  <artifactId>WordClassifier</artifactId>
+			  <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+			<artifactId>weka-dev</artifactId>
+			<version>3.7.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.squadra.atenea</groupId>
+			<artifactId>DataAccess</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.squadra.atenea</groupId>
+			<artifactId>AteneaParser</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>0.11.6</version>
+			<type>jar</type>
+		</dependency>
+
+	</dependencies>
+
+
+
+</project>
