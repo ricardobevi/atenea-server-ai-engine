@@ -14,7 +14,6 @@ import org.squadra.atenea.base.actions.PreloadAction;
 import org.squadra.atenea.base.word.Word;
 import org.squadra.atenea.base.word.WordTypes;
 import org.squadra.atenea.parser.model.Sentence;
-import org.squadra.atenea.wordclassifier.WordClassifier;
 
 import com.google.gson.Gson;
 
@@ -26,7 +25,8 @@ public class OrderHelper {
 	// por ahora el hashset se carga en el metodo isDesireExpression
 	private static HashSet<String> desireExpressions = new HashSet<String>();
 	private static String initialPrepositionRegularExpression = "^a |^ante |^bajo |^cabe |^con |^contra |^de |^desde |^en |^entre |^hacia |^hasta |^para |^por |^según |^sin |^so |^sobre |^tras";
-			
+	
+	
 	static {
 		
 		if (irrelevantWords.isEmpty()) {
@@ -63,8 +63,8 @@ public class OrderHelper {
 		String userMessageType =  UserMessageType.UNKNOWN;
 		String orderName = "";
 		
-		String processedSentence = OrderHelper.getParsedOrder(sentence);
-		String filteredSentence  = OrderHelper.filterIrrelevantWords(sentence.getAllWords(false));
+		String processedSentence = OrderHelper.getParsedOrder(sentence).toLowerCase();
+		String filteredSentence  = OrderHelper.filterIrrelevantWords(sentence.getAllWords(false)).toLowerCase();
 		
 		//COMIENZO DE LOGICA DE NEGOCIO
 
@@ -162,6 +162,7 @@ public class OrderHelper {
 		return  orderName ;
 	}
 
+	
 	private static String getPreLoadedAction(String filteredSentence, String processedSentence) {
 		
 		String orderName = "";
@@ -184,32 +185,8 @@ public class OrderHelper {
 		
 		if(processedOrder != null){
 			
-			//Tomo la ultima palabra base de la accion
-			String[] wordInActionName = processedOrder.getName().split(" ");
-			String lastWordInActionName = wordInActionName[wordInActionName.length -1];
+			String filteredParam = getParamOrder(processedOrder, sentence);
 			
-			//busco dicha palabra en la oracion
-			// luego cargo en una variable toda la oracion que se encuentra despues de esa palabra
-			ArrayList<Word> allWords = sentence.getAllWords(false);
-			
-			Boolean positionFlag = false;
-			String param ="";
-			
-			for(int i = 0 ; i < allWords.size() ; i++ ) {
-				
-				if ( !positionFlag && allWords.get(i).getBaseWord().equals(lastWordInActionName) ) {
-					positionFlag = true;
-				}
-				else if (positionFlag){
-					param += allWords.get(i).getName() + " ";
-				}
-				
-			}
-			
-			//filtro las palabras irrelevantes
-			String filteredParam = filterIrrelevantWords(param);
-			filteredParam = filteredParam.replaceAll(initialPrepositionRegularExpression, "").trim();
-
 			//seteo el valor param en el objeto de processedOrder
 			orderName = processedOrder.getName() + " " + filteredParam;
 		}
@@ -228,6 +205,38 @@ public class OrderHelper {
 		 * 
 		 */
 	}	
+
+	private static String getParamOrder(PreloadAction processedOrder, Sentence sentence) {
+		
+		//Tomo la ultima palabra base de la accion
+		String[] wordInActionName = processedOrder.getName().split(" ");
+		String lastWordInActionName = wordInActionName[wordInActionName.length -1];
+		
+		//busco dicha palabra en la oracion
+		// luego cargo en una variable toda la oracion que se encuentra despues de esa palabra
+		ArrayList<Word> allWords = sentence.getAllWords(false);
+		
+		Boolean positionFlag = false;
+		String param ="";
+		
+		for(int i = 0 ; i < allWords.size() ; i++ ) {
+			
+			if ( !positionFlag && allWords.get(i).getBaseWord().equals(lastWordInActionName) ) {
+				positionFlag = true;
+			}
+			else if (positionFlag){
+				param += allWords.get(i).getName() + " ";
+			}
+			
+		}
+		
+		//filtro las palabras irrelevantes
+		String filteredParam = filterIrrelevantWords(param);
+		filteredParam = filteredParam.replaceAll(initialPrepositionRegularExpression, "").trim();
+		
+		return filteredParam ;
+	}
+
 
 	private static String getLearnedAction(String filteredSentence, String processedSentence) {
 	
@@ -279,25 +288,27 @@ public class OrderHelper {
 		if (!isOrder) {
 			isOrder = isImperativeVerbAction(allWords);
 		}
-		*/
-
+		 */
+		
 		return isOrder? processedSentence : "";
 	}
 	
 
 	/**
 	 * Este metodo indica si la oracion es una accion expresada mediante verbos
-	 * imperativos
+	 * imperativos. Antes consultaba con la RAE, pero como devolvia mucha basura se cancelo esa funcionalidad
+	 * y ahora solo consulta contra una estructura de imperativos precargados
 	 * @param allVerbs 
 	 * 
 	 * @return
 	 */
+	@Deprecated
 	@SuppressWarnings("unused")
 	private static Boolean isImperativeVerbAction(ArrayList<Word> allWords) {
 
 		Boolean isOrder = false;
 		Boolean isImperativeChecked = false;
-		WordClassifier classifier = new WordClassifier();
+		//WordClassifier classifier = new WordClassifier();
 		Integer i = 0;
 
 		while (!isImperativeChecked && i < allWords.size()) {
@@ -306,14 +317,16 @@ public class OrderHelper {
 
 				log.debug("Orden: verificando si es verbo y es imperativo " + allWords.get(i).getName()
 						+ " es imperativo ( base: " + allWords.get(i).getBaseWord() + ")");
-
-				if (  !classifier.isImperative( allWords.get(i).getName(), allWords.get(i).getBaseWord() )) {
+				/*
+				//if ( imperativeExectorVerbs.contains(allWords.get(i).getName()) || !classifier.isImperative( allWords.get(i).getName(), allWords.get(i).getBaseWord() )) {
+				if ( imperativeVerbs.contains(allWords.get(i).getName()) ) {
 					log.debug("Orden: COMIENZA CON VERBO IMPERATIVO");
 					isImperativeChecked = true;
 					isOrder = true;
 				} else {
 					isImperativeChecked = true;
 				}
+				*/
 			}
 
 			i++;
@@ -385,7 +398,7 @@ public class OrderHelper {
 
 			i++;
 		}
-
+		
 		return isOrder;
 	}
 
@@ -403,8 +416,17 @@ public class OrderHelper {
 		/*
 		 * Se procede a tomar los verbos ,sustantivos principales y adjetivos 
 		 */
+		
+		
+		
+		
+		
 		for (Word element : sentence.getAllWords(false)) { 
-			if ( element.getType().equals( WordTypes.Type.VERB  ) || element.getType().equals(WordTypes.Type.NOUN) || element.getType().equals(WordTypes.Type.ADJECTIVE)  ) {
+			if ( element.getType().equals( WordTypes.Type.VERB  ) || 
+				 element.getType().equals(WordTypes.Type.PROPER_NAME) || 
+				 element.getType().equals(WordTypes.Type.NOUN) || 
+				 element.getType().equals(WordTypes.Type.ADJECTIVE)  ) {
+				
 				orderName += element.getBaseWord() + " ";
 			}
 		}

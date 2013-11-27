@@ -1,9 +1,57 @@
 package org.squadra.atenea.aiengine.morphologic;
 
+import java.util.HashMap;
+
 import lombok.extern.log4j.Log4j;
 
 @Log4j
 public class MorphologicAnalizer {
+	
+	private static HashMap<String, String> imperativeVerbs = new  HashMap<String, String> ();
+	
+	static{
+	
+		//TODO: esto debería ir en un archivo o a futuro consultarse de otro lado, 
+		// se agrego aca porque el parser no lo reconoce y nos saca las papas del fuego
+		// descarga, envia , escribi , escucha
+		
+		if (imperativeVerbs.isEmpty()) {
+		
+			imperativeVerbs.put("abrí", "abrir");
+			imperativeVerbs.put("abrime", "abrir");
+			imperativeVerbs.put("abrile", "abrir");
+			imperativeVerbs.put("abrite", "abrir");
+			imperativeVerbs.put("abrinos", "abrir");
+			imperativeVerbs.put("abriles", "abrir");
+			imperativeVerbs.put("abrila", "abrir");
+			imperativeVerbs.put("abrilas", "abrir");
+			imperativeVerbs.put("abrilo", "abrir");
+			imperativeVerbs.put("abrilos", "abrir");
+			               
+			imperativeVerbs.put("ejecuta", "ejecutar");
+			imperativeVerbs.put("ejecutame", "ejecutar");
+			imperativeVerbs.put("ejecutale", "ejecutar");
+			imperativeVerbs.put("ejecutate", "ejecutar");
+			imperativeVerbs.put("ejecutanos", "ejecutar");
+			imperativeVerbs.put("ejecutales", "ejecutar");
+			imperativeVerbs.put("ejecutala", "ejecutar");
+			imperativeVerbs.put("ejecutalas", "ejecutar");
+			imperativeVerbs.put("ejecutalo", "ejecutar");
+			imperativeVerbs.put("ejecutalos", "ejecutar");
+			              
+			imperativeVerbs.put("busca", "buscar");
+			imperativeVerbs.put("buscame", "buscar");
+			imperativeVerbs.put("buscale", "buscar");
+			imperativeVerbs.put("buscate", "buscar");
+			imperativeVerbs.put("buscanos", "buscar");
+			imperativeVerbs.put("buscales", "buscar");
+			imperativeVerbs.put("buscala", "buscar");
+			imperativeVerbs.put("buscalas", "buscar");
+			imperativeVerbs.put("buscalo", "buscar");
+			imperativeVerbs.put("buscalos", "buscar");
+		}
+		
+	}
 
 	public static String execute(String inputSentence) {
 		
@@ -11,9 +59,11 @@ public class MorphologicAnalizer {
 		
 		String outputSentence = inputSentence.trim();
 		
-		
-		// NO SE PARA QUE MIERDA ES ESTO, CREO QUE NO SIRVE
 		outputSentence = outputSentence.replace("Atenea", "atenea");
+		
+		//reemplazo imperativos para que los tome la gramática
+		
+		outputSentence = replaceImperativeVerbs( outputSentence );
 		
 		
 		// Pongo acentos a la primera palabra si es una pregunta
@@ -38,5 +88,28 @@ public class MorphologicAnalizer {
 		}
 		
 		return outputSentence;
+	}
+
+	
+	private static String replaceImperativeVerbs(String inputSentence) {
+
+		String[] inputSentences = inputSentence.split(" ");
+		String replacedSentence = "";
+		
+		
+		for (int i = 0; i < inputSentences.length; i++) {
+			
+			if ( imperativeVerbs.containsKey(inputSentences[i] ) ) {
+				
+				replacedSentence += imperativeVerbs.get(inputSentences[i]) + " ";
+				
+			} else {
+
+				replacedSentence += inputSentences[i] + " ";
+			}
+			
+		}
+			
+		return replacedSentence;
 	}
 }
