@@ -27,10 +27,10 @@ public class AIAlgorithmTest {
 		Message output = aiEngineFacade.execute(message);
 		System.out.println("======= MENSAJE ENTRANTE: " + message.getText());
 		System.out.println("======= RESPUESTA FINAL:  " + output.getText());
-		System.out.println("======= ORDEN :           " + output.getOrder());
+		System.out.println("======= ORDEN:            " + output.getOrder());
 	}
 	
-	@Test
+	//@Test
 	public void orderTest() {
 		searchResponse(new Message("Abrir programa"));
 		searchResponse(new Message("comenzar dictado"));
@@ -38,7 +38,7 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	@Test
+	//@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
 		searchResponse(new Message("Buenos días Atenea"));
@@ -60,12 +60,38 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	@Test
-	public void questionTest() {
+	//@Test
+	public void questionByKeyWordsTest() {
 		searchResponse(new Message("Quién participó de las independencias de Argentina, Chile y Perú"));
 		searchResponse(new Message("Cuándo murió San Martín"));
 		searchResponse(new Message("Dónde nació San Martín"));
 		searchResponse(new Message("Quién es Obama"));
+		assertTrue(true);
+	}
+	
+	@Test
+	public void questionFromAdditionalInfoTest() {
+		searchResponse(new Message("Quién murió ayer"));
+		searchResponse(new Message("Quién es el choto de San Martín"));
+		searchResponse(new Message("Quién es la esposa de José de San Martín"));
+		searchResponse(new Message("Quiénes son los hijos de San Martín"));
+		searchResponse(new Message("Cuándo murió San Martín"));
+		searchResponse(new Message("Cuándo fue la muerte de José de San Martín"));
+		searchResponse(new Message("Cuándo nace Obama"));
+		searchResponse(new Message("Cuándo ha sido el nacimiento de Obama"));
+		searchResponse(new Message("Dónde había muerto San Martín"));
+		searchResponse(new Message("Dónde estudió Barack Obama"));
+		searchResponse(new Message("Dónde murió Néstor Kirchner"));
+		searchResponse(new Message("Dónde debutó Maradona"));
+		searchResponse(new Message("Dónde sucumbió José de San Martín"));
+		searchResponse(new Message("En qué cree Obama"));
+		searchResponse(new Message("Cuál es la religión de Barack Obama"));
+		searchResponse(new Message("De qué partido político fue Perón"));
+		searchResponse(new Message("Cuáles eran los apodos de Maradona"));
+		searchResponse(new Message("En qué posición jugaba Diego Armando Maradona"));
+		searchResponse(new Message("Dónde jugó Lionel Messi"));
+		searchResponse(new Message("Cuántos goles hizo Lionel Messi"));
+		searchResponse(new Message("Cuántas conversiones tiene Maradona"));
 		assertTrue(true);
 	}
 

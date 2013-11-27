@@ -82,8 +82,23 @@ public class MorphologicAnalizer {
 			else if (firstWord.toLowerCase().matches("quien")) {
 				outputSentence = outputSentence.replace(firstWord, "Quién");
 			}
+			else if (firstWord.toLowerCase().matches("quienes")) {
+				outputSentence = outputSentence.replace(firstWord, "Quiénes");
+			}
+			else if (firstWord.toLowerCase().matches("cual")) {
+				outputSentence = outputSentence.replace(firstWord, "Cuál");
+			}
+			else if (firstWord.toLowerCase().matches("cuales")) {
+				outputSentence = outputSentence.replace(firstWord, "Cuáles");
+			}
 			else if (firstWord.toLowerCase().matches("que")) {
 				outputSentence = outputSentence.replace(firstWord, "Qué");
+			}
+			else if (firstWord.toLowerCase().matches("cuanto")) {
+				outputSentence = outputSentence.replace(firstWord, "Cuánto");
+			}
+			else if (firstWord.toLowerCase().matches("cuantos")) {
+				outputSentence = outputSentence.replace(firstWord, "Cuántos");
 			}
 		}
 		
