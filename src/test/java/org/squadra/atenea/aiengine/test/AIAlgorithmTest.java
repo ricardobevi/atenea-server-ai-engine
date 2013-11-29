@@ -2,6 +2,8 @@ package org.squadra.atenea.aiengine.test;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,9 +27,11 @@ public class AIAlgorithmTest {
 	
 	public void searchResponse(Message message) {
 		Message output = aiEngineFacade.execute(message);
+		System.out.println();
 		System.out.println("======= MENSAJE ENTRANTE: " + message.getText());
 		System.out.println("======= RESPUESTA FINAL:  " + output.getText());
 		System.out.println("======= ORDEN:            " + output.getOrder());
+		System.out.println();
 	}
 	
 	//@Test
@@ -38,7 +42,7 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	//@Test
+	@Test
 	public void dialogTest() {
 		searchResponse(new Message("Hola Atenea"));
 		searchResponse(new Message("Buenos días Atenea"));
@@ -56,7 +60,8 @@ public class AIAlgorithmTest {
 		searchResponse(new Message("Cómo te llamás"));
 		searchResponse(new Message("Quién sos"));
 		searchResponse(new Message("Cuántos años tenés"));
-		searchResponse(new Message("soy Leandro"));
+		searchResponse(new Message("Hola Atenea, cómo estás"));
+		searchResponse(new Message("Hola, qué hacés"));
 		assertTrue(true);
 	}
 	
@@ -69,7 +74,7 @@ public class AIAlgorithmTest {
 		assertTrue(true);
 	}
 	
-	@Test
+	//@Test
 	public void questionFromAdditionalInfoTest() {
 		searchResponse(new Message("Quién murió ayer"));
 		searchResponse(new Message("Quién es el choto de San Martín"));
@@ -91,7 +96,6 @@ public class AIAlgorithmTest {
 		searchResponse(new Message("En qué posición jugaba Diego Armando Maradona"));
 		searchResponse(new Message("Dónde jugó Lionel Messi"));
 		searchResponse(new Message("Cuántos goles hizo Lionel Messi"));
-		searchResponse(new Message("Cuántas conversiones tiene Maradona"));
 		assertTrue(true);
 	}
 

@@ -1,5 +1,8 @@
 package org.squadra.atenea.aiengine.responses;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import org.squadra.atenea.aiengine.semantic.UserMessageType;
 import org.squadra.atenea.ateneacommunication.Message;
 import org.squadra.atenea.data.query.DialogQuery;
@@ -20,7 +23,15 @@ public class DialogResponseSearcher {
 		}
 		
 		String systemName = "Atenea";
-		String systemAge = "5 meses";
+		
+		// Calculo los meses de vida de Atenea
+		Calendar startCalendar = new GregorianCalendar();
+		startCalendar.set(2013, 4, 1);
+		Calendar endCalendar = Calendar.getInstance();
+		int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
+		int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
+		
+		String systemAge = diffMonth + " meses";
 		
 		String finalResponse = "";
 		Integer randomInt1 = (int) Math.round(Math.random() * 100);
