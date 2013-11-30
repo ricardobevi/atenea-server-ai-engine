@@ -38,6 +38,8 @@ public class OrderHelper {
 			irrelevantWords.add("gracias");
 			irrelevantWords.add("disculpa");
 			irrelevantWords.add("disculpame");
+			irrelevantWords.add("porfavor");
+			
 		}
 		
 		if (desireExpressions.isEmpty()) {
@@ -416,10 +418,6 @@ public class OrderHelper {
 		/*
 		 * Se procede a tomar los verbos ,sustantivos principales y adjetivos 
 		 */
-		
-		
-		
-		
 		
 		for (Word element : sentence.getAllWords(false)) { 
 			if ( element.getType().equals( WordTypes.Type.VERB  ) || 
