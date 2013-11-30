@@ -38,6 +38,7 @@ public class OrderHelper {
 			irrelevantWords.add("gracias");
 			irrelevantWords.add("disculpa");
 			irrelevantWords.add("disculpame");
+			irrelevantWords.add("me");
 			irrelevantWords.add("porfavor");
 			
 		}
@@ -211,8 +212,8 @@ public class OrderHelper {
 	private static String getParamOrder(PreloadAction processedOrder, Sentence sentence) {
 		
 		//Tomo la ultima palabra base de la accion
-		String[] wordInActionName = processedOrder.getName().split(" ");
-		String lastWordInActionName = wordInActionName[wordInActionName.length -1];
+		String[] wordInActionName = processedOrder.getName().toLowerCase().split(" ");
+		String lastWordInActionName = wordInActionName[wordInActionName.length -1].toLowerCase();
 		
 		//busco dicha palabra en la oracion
 		// luego cargo en una variable toda la oracion que se encuentra despues de esa palabra
@@ -223,18 +224,19 @@ public class OrderHelper {
 		
 		for(int i = 0 ; i < allWords.size() ; i++ ) {
 			
-			if ( !positionFlag && allWords.get(i).getBaseWord().equals(lastWordInActionName) ) {
+			if ( !positionFlag && allWords.get(i).getBaseWord().toLowerCase().equals(lastWordInActionName) ) {
 				positionFlag = true;
 			}
 			else if (positionFlag){
-				param += allWords.get(i).getName() + " ";
+				param += allWords.get(i).getName().toLowerCase() + " ";
 			}
 			
 		}
 		
 		//filtro las palabras irrelevantes
 		String filteredParam = filterIrrelevantWords(param);
-		filteredParam = filteredParam.replaceAll(initialPrepositionRegularExpression, "").trim();
+		filteredParam = filteredParam.replaceAll(initialPrepositionRegularExpression, "").toLowerCase().trim();
+		log.info("PARAMETROS: " + filteredParam  );
 		
 		return filteredParam ;
 	}
